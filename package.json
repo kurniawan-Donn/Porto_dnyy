@@ -6,12 +6,20 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "next lint",
+    "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.116.0",
+    "lucide-react": "^1.47.0",
+    "motion": "^13.4.0",
     "next": "16.3.5",
+    "next-themes": "^0.4.6",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "react-icons": "^5.7.0",
+    "resend": "^6.28.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

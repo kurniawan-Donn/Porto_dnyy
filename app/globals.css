@@ -1,26 +1,89 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Konfigurasi dark mode berbasis class (bukan media query) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+html {
+  scroll-behavior: smooth;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+section[id],
+div[id="main-content"] {
+  scroll-margin-top: 80px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@media (min-width: 768px) {
+  section[id],
+  div[id="main-content"] {
+    scroll-margin-top: 90px;
   }
 }
 
+:root {
+  --background: #f8fafc; /* slate-50 */
+  --foreground: #0f172a; /* slate-900 */
+}
+
+.dark {
+  --background: #0f172a; /* slate-900 */
+  --foreground: #f8fafc; /* slate-50 */
+}
+
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1; /* slate-300 */
+  border-radius: 5px;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155; /* slate-700 */
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #06b6d4; /* cyan-500 */
+}
+
+/* Selection */
+::selection {
+  background-color: #06b6d4;
+  color: white;
+}
+
+/* Offset scroll agar section tidak tertutup navbar fixed */
+section[id] {
+  scroll-margin-top: 80px;
+}
+
+/* Focus ring untuk aksesibilitas keyboard */
+:focus-visible {
+  outline: 2px solid #06b6d4;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Hilangkan focus ring untuk mouse click */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Hormati preferensi user yang tidak suka animasi */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
