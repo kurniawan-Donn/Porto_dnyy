@@ -8,12 +8,10 @@ import {
   Calendar,
   Loader2,
   Briefcase,
-  CheckCircle2,
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import TagPill from "./TagPill";
 import TagPopup, { type TagData } from "./TagPopup";
-import { TechIcon } from "@/lib/tech-icons";
 
 // ============================================
 // Types
@@ -157,25 +155,6 @@ function ExperienceCard({
 }
 
 // ============================================
-// Timeline dot decoration
-// ============================================
-function TimelineDot({ index }: { index: number }) {
-  return (
-    <div className="pointer-events-none absolute -left-[9px] top-8 hidden lg:block">
-      <motion.div
-        initial={{ scale: 0, opacity: 0 }}
-        whileInView={{ scale: 1, opacity: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.4, delay: index * 0.08 + 0.15 }}
-        className="h-4 w-4 rounded-full border-2 border-cyan-500 bg-slate-900"
-      >
-        <div className="absolute inset-0.5 rounded-full bg-cyan-500/40" />
-      </motion.div>
-    </div>
-  );
-}
-
-// ============================================
 // Main Component
 // ============================================
 export default function Experience() {
@@ -219,7 +198,7 @@ export default function Experience() {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        {/* Section heading — konsisten dengan Skills.tsx & Projects.tsx */}
+        {/* Section heading */}
         <h2 className="mb-12 flex items-center gap-4 text-3xl font-bold text-slate-900 dark:text-slate-100">
           <span className="font-mono text-xl text-cyan-600 dark:text-cyan-400">
             03.
@@ -244,27 +223,69 @@ export default function Experience() {
             </p>
           </div>
         ) : (
-          /* Timeline */
-          <div className="relative lg:pl-8">
-            {/* Vertical line (desktop only) */}
-            <div
-              className="pointer-events-none absolute left-0 top-4 bottom-4 hidden w-px bg-gradient-to-b from-transparent via-slate-700 to-transparent lg:block"
-              aria-hidden="true"
-            />
+          /* ─── Timeline ─── */
+          <div className="relative space-y-5 lg:pl-12">
+            {/* 
+              ═══ GARIS VERTIKAL dengan efek glow ═══
+              - Gradient: cyan terang → cyan redup → transparan
+              - Drop shadow cyan untuk efek "glow"
+              - Lebar lebih tebal (w-0.5 = 2px) biar glow kelihatan
+            */}
+            {experiences.length > 1 && (
+              <div
+                className="absolute left-6 top-12 bottom-12 hidden w-0.5 lg:block"
+                aria-hidden="true"
+              >
+                {/* Layer 1: garis inti (gradient) */}
+                <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/70 via-cyan-500/30 via-slate-700/40 to-transparent" />
 
-            <div className="space-y-5">
-              {experiences.map((experience, index) => (
-                <div key={experience.id} className="relative">
-                  <TimelineDot index={index} />
-                  <ExperienceCard
-                    experience={experience}
-                    index={index}
-                    techTagsMap={techTagsMap}
-                    onTagClick={setSelectedTag}
-                  />
+                {/* Layer 2: glow blur di belakang garis */}
+                <div className="absolute -inset-x-2 inset-y-0 bg-gradient-to-b from-cyan-500/20 via-cyan-500/5 to-transparent blur-sm" />
+              </div>
+            )}
+
+            {experiences.map((experience, index) => (
+              <div key={experience.id} className="relative">
+                {/* 
+                  ═══ DOT dengan efek glow ═══
+                  - Ring dark (ring-slate-900/950) untuk "cutout" dari garis
+                  - Inner cyan core
+                  - Outer glow ring
+                  - Drop shadow cyan
+                */}
+                <div className="absolute -left-6 top-11 z-10 hidden -translate-x-1/2 lg:block">
+                  <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    whileInView={{ scale: 1, opacity: 1 }}
+                    viewport={{ once: true }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.1 + 0.2,
+                      type: "spring",
+                      stiffness: 200,
+                    }}
+                    className="relative"
+                  >
+                    {/* Outer pulse ring (glow effect) */}
+                    <span className="absolute inset-0 -m-1.5 animate-pulse rounded-full bg-cyan-500/30 blur-sm" />
+
+                    {/* Middle ring (cutout dari garis) */}
+                    <span className="relative flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-900 ring-4 ring-slate-900 dark:bg-slate-950 dark:ring-slate-950">
+                      {/* Inner cyan core */}
+                      <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_2px_rgba(6,182,212,0.8)]" />
+                    </span>
+                  </motion.div>
                 </div>
-              ))}
-            </div>
+
+                {/* Card */}
+                <ExperienceCard
+                  experience={experience}
+                  index={index}
+                  techTagsMap={techTagsMap}
+                  onTagClick={setSelectedTag}
+                />
+              </div>
+            ))}
           </div>
         )}
       </motion.div>

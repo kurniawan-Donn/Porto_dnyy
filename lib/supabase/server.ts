@@ -21,7 +21,8 @@ export async function createClient() {
     );
   }
 
-  return createServerClient(supabaseUrl, supabaseAnonKey, {
+  // 1. Simpan client ke dalam variabel 'supabase'
+  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
@@ -38,4 +39,28 @@ export async function createClient() {
       },
     },
   });
+
+  // 2. TAMBAHKAN INI — auto-clear session kalau refresh token invalid
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error?.code === "refresh_token_not_found") {
+    // Clear cookies yang invalid
+    const allCookies = cookieStore.getAll();
+    allCookies.forEach((cookie) => {
+      if (cookie.name.startsWith("sb-")) {
+        try {
+          // Menghapus semua cookie bawaan Supabase
+          cookieStore.delete(cookie.name);
+        } catch {
+          // ignore error jika dipanggil dari Server Component yang tidak mengizinkan modifikasi cookie
+        }
+      }
+    });
+  }
+
+  // 3. Return client yang sudah diverifikasi
+  return supabase;
 }
