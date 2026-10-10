@@ -26,6 +26,8 @@ import {
   SiLinux,
   SiGooglechrome,
   SiGnubash,
+  SiStreamlit,
+  SiGithubactions,
 } from "react-icons/si";
 import {
   Code2,
@@ -38,6 +40,12 @@ import {
   Cpu,
   Palette,
   Bot,
+  FileText,
+  Image as ImageIcon,
+  Presentation,
+  Music,
+  Cloud,
+  Shuffle,
 } from "lucide-react";
 
 type IconComponent = ComponentType<
@@ -101,6 +109,22 @@ export const TECH_ICONS: Record<string, TechIconEntry> = {
   award:          { component: Award,              color: "#06B6D4", label: "Award",               isBrand: false },
   badge:          { component: BadgeCheck,         color: "#06B6D4", label: "Badge",               isBrand: false },
   book:           { component: BookOpen,           color: "#06B6D4", label: "Learning",            isBrand: false },
+
+    // ── PYTHON ECOSYSTEM ──
+  streamlit:      { component: SiStreamlit,      color: "#FF4B4B", label: "Streamlit",          isBrand: true },
+  "streamlit cloud": { component: SiStreamlit,   color: "#FF4B4B", label: "Streamlit Cloud",    isBrand: true },
+  pikepdf:        { component: FileText,         color: "#3776AB", label: "pikepdf",            isBrand: false },
+  pillow:         { component: ImageIcon,        color: "#3776AB", label: "Pillow (PIL)",       isBrand: false },
+  "python-docx":  { component: FileText,         color: "#2B579A", label: "python-docx",        isBrand: false },
+  openpyxl:       { component: FileSpreadsheet,  color: "#217346", label: "openpyxl",           isBrand: false },
+  "python-pptx":  { component: Presentation,     color: "#B7472A", label: "python-pptx",        isBrand: false },
+  mutagen:        { component: Music,            color: "#7F52FF", label: "mutagen",            isBrand: false },
+
+  // ── JAVASCRIPT ECOSYSTEM ──
+  sortablejs:     { component: Shuffle,          color: "#00A2E8", label: "SortableJS",         isBrand: false },
+
+  // ── DEVOPS ──
+  "github actions": { component: SiGithubactions, color: "#2088FF", label: "GitHub Actions",    isBrand: true },
 };
 
 export function TechIcon({

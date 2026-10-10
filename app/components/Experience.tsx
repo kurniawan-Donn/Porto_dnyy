@@ -71,19 +71,19 @@ function ExperienceCard({
         {/* Logo / Number block */}
         <div className="flex flex-shrink-0 items-start gap-3">
           {experience.image_url ? (
-            <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-lg border border-slate-700 bg-slate-950">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={experience.image_url}
-                alt={experience.company}
-                className="h-full w-full object-contain p-1.5"
-              />
-            </div>
+        <div className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-lg border border-slate-200 bg-white dark:border-slate-700 dark:bg-slate-800">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+              src={experience.image_url}
+              alt={experience.company}
+              className="h-full w-full object-contain p-1.5"
+            />
+          </div>
           ) : (
-            <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-400">
-              <Building2 size={22} />
-            </div>
-          )}
+          <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-400">
+            <Building2 size={22} />
+          </div>
+      )}
         </div>
 
         {/* Content */}

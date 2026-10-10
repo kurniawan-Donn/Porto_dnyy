@@ -88,7 +88,7 @@ function CaseStudyModal({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/80 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-[110] flex items-center justify-center bg-slate-950/60 p-4 backdrop-blur-md dark:bg-slate-950/80"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -100,7 +100,7 @@ function CaseStudyModal({
         exit={{ opacity: 0, scale: 0.95, y: 30 }}
         transition={{ duration: 0.28, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => e.stopPropagation()}
-        className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 shadow-[0_0_60px_rgba(6,182,212,0.2)]"
+        className="relative flex max-h-[92vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_0_60px_rgba(6,182,212,0.2)] dark:border-slate-700 dark:bg-slate-900"
       >
         <div className="absolute top-0 left-0 right-0 z-10 h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
 
@@ -108,36 +108,36 @@ function CaseStudyModal({
           type="button"
           onClick={onClose}
           aria-label="Tutup"
-          className="absolute top-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-slate-700 bg-slate-900/90 text-slate-400 backdrop-blur-sm transition-all hover:rotate-90 hover:border-cyan-500/50 hover:text-cyan-400"
+          className="absolute top-4 right-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-slate-200 bg-white/90 text-slate-500 backdrop-blur-sm transition-all hover:rotate-90 hover:border-cyan-500/50 hover:text-cyan-600 dark:border-slate-700 dark:bg-slate-900/90 dark:text-slate-400 dark:hover:text-cyan-400"
         >
           <X size={16} />
         </button>
 
         <div className="overflow-y-auto">
           {project.image_url && (
-            <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-slate-800 bg-slate-950">
+            <div className="relative aspect-[16/9] w-full overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-slate-800 dark:bg-slate-950">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={project.image_url}
                 alt={project.title}
                 className="h-full w-full object-cover"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent dark:from-slate-950 dark:via-slate-950/20" />
             </div>
           )}
 
           <div className="p-6 sm:p-8">
             <div className="mb-6">
               {cs.subtitle && (
-                <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-cyan-400">
+                <p className="mb-2 font-mono text-[11px] uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
                   {cs.subtitle}
                 </p>
               )}
-              <h2 className="text-2xl font-bold text-slate-100 sm:text-3xl">
+              <h2 className="text-2xl font-bold text-slate-900 sm:text-3xl dark:text-slate-100">
                 {project.title}
               </h2>
               {project.description && (
-                <p className="mt-3 text-sm leading-relaxed text-slate-400 sm:text-base">
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 sm:text-base dark:text-slate-400">
                   {project.description}
                 </p>
               )}
@@ -148,7 +148,7 @@ function CaseStudyModal({
                 {project.tech.map((t) => (
                   <span
                     key={t}
-                    className="inline-flex items-center gap-1.5 rounded-md border border-slate-700 bg-slate-800/50 px-2.5 py-1 font-mono text-xs text-slate-300"
+                    className="inline-flex items-center gap-1.5 rounded-md border border-slate-200 bg-slate-100 px-2.5 py-1 font-mono text-xs text-slate-700 dark:border-slate-700 dark:bg-slate-800/50 dark:text-slate-300"
                   >
                     {t}
                   </span>
@@ -157,17 +157,17 @@ function CaseStudyModal({
             )}
 
             {sections.length > 0 ? (
-              <div className="space-y-6 border-t border-slate-800 pt-6">
+              <div className="space-y-6 border-t border-slate-200 pt-6 dark:border-slate-800">
                 {sections.map((section) => (
                   <div key={section.key} className="flex gap-4">
-                    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 font-mono text-sm font-bold text-cyan-400">
+                    <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 font-mono text-sm font-bold text-cyan-600 dark:text-cyan-400">
                       {section.letter}
                     </div>
                     <div className="min-w-0 flex-1">
-                      <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-cyan-400/80">
+                      <p className="mb-1.5 font-mono text-[10px] uppercase tracking-widest text-cyan-600/80 dark:text-cyan-400/80">
                         {section.label}
                       </p>
-                      <p className="whitespace-pre-line text-sm leading-relaxed text-slate-300">
+                      <p className="whitespace-pre-line text-sm leading-relaxed text-slate-700 dark:text-slate-300">
                         {section.value}
                       </p>
                     </div>
@@ -175,7 +175,7 @@ function CaseStudyModal({
                 ))}
               </div>
             ) : (
-              <div className="border-t border-slate-800 pt-6">
+              <div className="border-t border-slate-200 pt-6 dark:border-slate-800">
                 <p className="text-sm italic text-slate-500">
                   Belum ada studi kasus untuk project ini.
                 </p>
@@ -183,7 +183,7 @@ function CaseStudyModal({
             )}
 
             {(project.github_url || project.demo_url) && (
-              <div className="mt-8 flex flex-wrap gap-3 border-t border-slate-800 pt-6">
+              <div className="mt-8 flex flex-wrap gap-3 border-t border-slate-200 pt-6 dark:border-slate-800">
                 {project.demo_url && (
                   <a
                     href={project.demo_url}
@@ -200,7 +200,7 @@ function CaseStudyModal({
                     href={project.github_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 rounded-md border border-slate-700 px-4 py-2.5 text-sm text-slate-300 transition-all hover:border-cyan-500/50 hover:text-cyan-400"
+                    className="inline-flex items-center gap-2 rounded-md border border-slate-300 px-4 py-2.5 text-sm text-slate-700 transition-all hover:border-cyan-500/50 hover:text-cyan-600 dark:border-slate-700 dark:text-slate-300 dark:hover:text-cyan-400"
                   >
                     <SiGithub size={14} />
                     Source Code
@@ -275,7 +275,6 @@ function ProjectCard({
               className="h-full w-full object-cover transition duration-700 group-hover:scale-[1.05]"
               loading="lazy"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/10 to-transparent" />
           </div>
         </button>
       ) : (

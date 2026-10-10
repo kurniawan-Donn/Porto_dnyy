@@ -42,7 +42,7 @@ export default function TagPopup({ tag, onClose }: TagPopupProps) {
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/70 p-4 backdrop-blur-md"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-slate-950/50 p-4 backdrop-blur-md dark:bg-slate-950/70"
       onClick={onClose}
       role="dialog"
       aria-modal="true"
@@ -54,7 +54,7 @@ export default function TagPopup({ tag, onClose }: TagPopupProps) {
         exit={{ opacity: 0, scale: 0.9, y: 20 }}
         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-700 bg-slate-900 p-6 shadow-[0_0_60px_rgba(6,182,212,0.25)]"
+        className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-200 bg-white p-6 shadow-[0_0_60px_rgba(6,182,212,0.25)] dark:border-slate-700 dark:bg-slate-900"
       >
         {/* Accent line */}
         <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
@@ -67,7 +67,7 @@ export default function TagPopup({ tag, onClose }: TagPopupProps) {
           type="button"
           onClick={onClose}
           aria-label="Tutup"
-          className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full border border-slate-700 bg-slate-800 text-slate-400 transition-all hover:rotate-90 hover:border-cyan-500/50 hover:text-cyan-400"
+          className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-slate-100 text-slate-500 transition-all hover:rotate-90 hover:border-cyan-500/50 hover:text-cyan-600 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-400 dark:hover:text-cyan-400"
         >
           <X size={16} />
         </button>
@@ -79,17 +79,19 @@ export default function TagPopup({ tag, onClose }: TagPopupProps) {
           </div>
           <div className="min-w-0">
             {tag.category && (
-              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-cyan-400">
+              <p className="mb-1 font-mono text-[10px] uppercase tracking-widest text-cyan-600 dark:text-cyan-400">
                 {tag.category}
               </p>
             )}
-            <h3 className="text-xl font-bold text-slate-100">{tag.name}</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100">
+              {tag.name}
+            </h3>
           </div>
         </div>
 
         {/* Deskripsi */}
-        <div className="border-t border-slate-800 pt-4">
-          <p className="text-sm leading-relaxed text-slate-400">
+        <div className="border-t border-slate-200 pt-4 dark:border-slate-800">
+          <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
             {tag.description || "Belum ada deskripsi untuk teknologi ini."}
           </p>
         </div>
