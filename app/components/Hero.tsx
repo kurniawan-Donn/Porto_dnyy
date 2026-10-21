@@ -99,10 +99,10 @@ export default function Hero({ settings }: { settings: SiteSettings | null }) {
 
         <motion.div
           style={animated ? { opacity: contentOpacity, y: contentY, scale: contentScale } : undefined}
-          // Desktop: bukan justify-center — banner pengumuman bisa mendorong Hero
-          // ±140px ke bawah dan memotong tombol CTA di layar 768px. Jarak atas
-          // ≈ tengah layar di layar tinggi, minimal 6rem di layar pendek.
-          className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 pt-28 pb-16 lg:h-full lg:min-h-0 lg:justify-start lg:pt-[max(6rem,calc(50vh_-_17rem))] lg:pb-10"
+          // Jarak atas menyisakan ruang navbar + banner pengumuman yang melayang
+          // (AnnouncementBanner). Desktop: ≈ tengah layar di layar tinggi,
+          // minimal 9rem di layar pendek agar tombol CTA tetap terlihat.
+          className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 pt-44 pb-16 lg:h-full lg:min-h-0 lg:justify-start lg:pt-[max(9rem,calc(50vh_-_15rem))] lg:pb-10"
         >
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-3">
             {/* KONTEN */}

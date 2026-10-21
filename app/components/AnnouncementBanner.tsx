@@ -39,15 +39,18 @@ export default function AnnouncementBanner({ text, active, version }: Props) {
   return (
     <AnimatePresence>
       {isVisible && (
+        // Melayang di atas Hero (absolute, ikut ter-scroll) — tidak memakan
+        // ruang, jadi Hero tidak terdorong turun saat banner muncul dan
+        // gambar Hero tetap terlihat di belakang kaca transparan.
         <motion.div
-          initial={{ opacity: 0, y: -20, height: 0 }}
-          animate={{ opacity: 1, y: 0, height: "auto" }}
-          exit={{ opacity: 0, y: -20, height: 0 }}
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -12 }}
           transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          className="relative w-full pt-16 md:pt-20"
+          className="absolute inset-x-0 top-16 z-30 md:top-20"
         >
           <div className="max-w-5xl mx-auto px-4 md:px-6">
-            <div className="relative flex items-center gap-3 bg-slate-100/80 dark:bg-slate-800/60 backdrop-blur-sm border border-slate-200 dark:border-slate-700 rounded-lg pl-4 pr-2 py-2.5 overflow-hidden group">
+            <div className="relative flex items-center gap-3 bg-white/55 dark:bg-slate-900/45 backdrop-blur-md border border-white/60 dark:border-slate-700/60 shadow-[0_8px_30px_-12px_rgba(2,6,23,0.35)] rounded-lg pl-4 pr-2 py-2.5 overflow-hidden group">
               {/* Accent bar kiri */}
               <div className="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-cyan-500 to-blue-500 shadow-[0_0_12px_rgba(6,182,212,0.5)]" />
 
