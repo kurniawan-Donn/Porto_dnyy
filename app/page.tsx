@@ -31,7 +31,7 @@ export default async function Home() {
 
       <main
         id="main-content"
-        className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-sans transition-colors duration-300 overflow-x-hidden"
+        className="min-h-screen bg-slate-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 font-sans transition-colors duration-300 overflow-x-clip"
       >
         <Navbar />
         <AnnouncementBanner

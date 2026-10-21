@@ -3,7 +3,8 @@ import { useState, type FormEvent, type ChangeEvent, type ReactNode } from "reac
 import { motion } from "motion/react";
 import { Mail, MapPin, Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
 import type { SiteSettings } from "@/lib/types";
-import { useSound } from "./SoundProvider";
+import { useSound } from "./SoundProvider";
+import SectionHeading from "./SectionHeading";
 
 // ============================================
 // Ikon Sosial (SVG manual)
@@ -133,10 +134,11 @@ export default function Contact({ settings }: { settings: ContactSettings }) {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-3xl font-bold mb-12 flex items-center gap-4 text-slate-900 dark:text-slate-100">
-          <span className="text-cyan-600 dark:text-cyan-400 font-mono text-xl">05.</span> Mari Terhubung
-          <div className="h-px bg-slate-300 dark:bg-slate-700 flex-grow ml-4 max-w-xs"></div>
-        </h2>
+        <SectionHeading
+          index="05"
+          code="Handshake"
+          title="Mari Terhubung"
+        />
 
         <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
           {/* ============================

@@ -9,7 +9,8 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import type { Skill } from "@/lib/types";
+import type { Skill } from "@/lib/types";
+import SectionHeading from "./SectionHeading";
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "Web Development": Code2,
@@ -119,13 +120,12 @@ export default function Skills({ skills }: { skills: Skill[] }) {
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="text-3xl font-bold mb-12 flex items-center gap-4 text-slate-900 dark:text-slate-100">
-          <span className="text-cyan-600 dark:text-cyan-400 font-mono text-xl">
-            01.
-          </span>{" "}
-          Keahlian & Teknologi
-          <div className="h-px bg-slate-300 dark:bg-slate-700 flex-grow ml-4 max-w-xs"></div>
-        </h2>
+        <SectionHeading
+          index="01"
+          code="Arsenal"
+          title="Keahlian & Teknologi"
+          kicker="Tools dan teknologi yang saya pakai untuk membangun, mengamankan, dan mengaudit sistem."
+        />
 
         {skills.length === 0 ? (
           <p className="text-sm text-slate-500 dark:text-slate-400">

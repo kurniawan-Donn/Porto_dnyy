@@ -3,6 +3,13 @@
 /* Konfigurasi dark mode berbasis class (bukan media query) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Font dari next/font (app/layout.tsx) */
+@theme inline {
+  --font-sans: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-space-grotesk), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains-mono), ui-monospace, SFMono-Regular, monospace;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -33,6 +40,33 @@ body {
   background-color: var(--background);
   color: var(--foreground);
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ============================================
+   Tekstur film: grain (kedua tema) + scanline CRT (dark saja).
+   Satu layer fixed tanpa blend-mode supaya scroll tetap ringan.
+   ============================================ */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.035;
+}
+
+.dark body::after {
+  background-image:
+    repeating-linear-gradient(to bottom, rgba(255, 255, 255, 0.5) 0 1px, transparent 1px 3px),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  opacity: 0.045;
+}
+
+@media print {
+  body::after {
+    display: none;
+  }
 }
 
 /* Custom Scrollbar */

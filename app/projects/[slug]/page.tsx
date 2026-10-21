@@ -139,7 +139,7 @@ export default async function ProjectPage({ params }: Props) {
 
       <main
         id="main-content"
-        className="min-h-screen overflow-x-hidden bg-slate-50 font-sans text-slate-900 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-50"
+        className="min-h-screen overflow-x-clip bg-slate-50 font-sans text-slate-900 transition-colors duration-300 dark:bg-slate-900 dark:text-slate-50"
       >
         <Navbar />
 

@@ -5,7 +5,8 @@ import { motion } from "motion/react";
 import { ArrowUpRight, Maximize2 } from "lucide-react";
 import ImageLightbox from "@/components/ui/ImageLightbox";
 import { getCertIcon } from "@/lib/lucide-icons";
-import type { Certification } from "@/lib/types";
+import type { Certification } from "@/lib/types";
+import SectionHeading from "./SectionHeading";
 
 // ============================================
 // Komponen Utama Certifications
@@ -28,13 +29,12 @@ export default function Certifications({ items }: { items: Certification[] }) {
         transition={{ duration: 0.5 }}
       >
         {/* ═══ SECTION HEADING — sama persis dengan Skills.tsx ═══ */}
-        <h2 className="text-3xl font-bold mb-12 flex items-center gap-4 text-slate-900 dark:text-slate-100">
-          <span className="text-cyan-600 dark:text-cyan-400 font-mono text-xl">
-            04.
-          </span>{" "}
-          Sertifikasi
-          <div className="h-px bg-slate-300 dark:bg-slate-700 flex-grow ml-4 max-w-xs"></div>
-        </h2>
+        <SectionHeading
+          index="04"
+          code="Credentials"
+          title="Sertifikasi"
+          kicker="Kredensial yang bisa diverifikasi langsung ke penerbitnya."
+        />
 
         {/* ═══ GRID CARD ═══ */}
         {items.length === 0 ? (

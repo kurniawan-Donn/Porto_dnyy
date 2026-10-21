@@ -6,6 +6,7 @@ import { Building2, MapPin, Calendar, Briefcase } from "lucide-react";
 import type { Experience, TechTag } from "@/lib/types";
 import TagPill from "./TagPill";
 import TagPopup from "./TagPopup";
+import SectionHeading from "./SectionHeading";
 
 // ============================================
 // Experience Card
@@ -150,13 +151,12 @@ export default function Experience({
         transition={{ duration: 0.5 }}
       >
         {/* Section heading */}
-        <h2 className="mb-12 flex items-center gap-4 text-3xl font-bold text-slate-900 dark:text-slate-100">
-          <span className="font-mono text-xl text-cyan-600 dark:text-cyan-400">
-            03.
-          </span>{" "}
-          Pengalaman
-          <div className="ml-4 h-px max-w-xs flex-grow bg-slate-300 dark:bg-slate-700"></div>
-        </h2>
+        <SectionHeading
+          index="03"
+          code="Field Log"
+          title="Pengalaman"
+          kicker="Riwayat kerja dan peran yang membentuk cara saya bekerja."
+        />
 
         {experiences.length === 0 ? (
           /* Empty state */

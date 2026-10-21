@@ -1,19 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import ThemeProvider from "./components/ThemeProvider";
 import StructuredData from "./components/StructuredData";
 import { SoundProvider } from "./components/SoundProvider";
 import "./globals.css";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+// Space Grotesk: heading & teks; JetBrains Mono: label, kode, HUD.
+// Keduanya variable font → semua ketebalan dalam satu file.
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-space-grotesk",
   subsets: ["latin"],
   display: "swap",
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-jetbrains-mono",
   subsets: ["latin"],
   display: "swap",
 });
@@ -84,7 +86,7 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning className="scroll-smooth">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased selection:bg-cyan-500 selection:text-white`}
+        className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased selection:bg-cyan-500 selection:text-white`}
       >
         <StructuredData />
         <ThemeProvider>

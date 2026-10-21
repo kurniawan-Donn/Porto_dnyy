@@ -10,6 +10,8 @@ export type SiteSettings = {
   hero_role: string | null;
   hero_description: string | null;
   hero_photo_url: string | null;
+  // Banner lebar untuk efek zoom Hero (migration 20261023000000_hero_banner.sql)
+  hero_banner_url: string | null;
   cv_url: string | null;
   email: string | null;
   location: string | null;

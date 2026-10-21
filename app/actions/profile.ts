@@ -12,6 +12,7 @@ export async function updateProfile(formData: FormData) {
     hero_role: formData.get("hero_role") as string,
     hero_description: formData.get("hero_description") as string,
     hero_photo_url: formData.get("hero_photo_url") as string,
+    hero_banner_url: (formData.get("hero_banner_url") as string) || null,
     cv_url: formData.get("cv_url") as string,
     email: formData.get("email") as string,
     location: formData.get("location") as string,

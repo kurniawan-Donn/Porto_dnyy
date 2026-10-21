@@ -12,8 +12,8 @@ import { useActiveSection } from "../hooks/useActiveSection";
 const NAV_LINKS = [
   { name: "Tentang", href: "/#tentang", id: "tentang" },
   { name: "Keahlian", href: "/#keahlian", id: "keahlian" },
-  { name: "Pengalaman", href: "/#pengalaman", id: "pengalaman" },
   { name: "Proyek", href: "/#proyek", id: "proyek" },
+  { name: "Pengalaman", href: "/#pengalaman", id: "pengalaman" },
   { name: "Sertifikasi", href: "/#sertifikasi", id: "sertifikasi" },
   { name: "Kontak", href: "/#kontak", id: "kontak" },
 ];

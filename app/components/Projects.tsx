@@ -9,6 +9,7 @@ import type { Project, TechTag } from "@/lib/types";
 import TagPill from "./TagPill";
 import TagPopup from "./TagPopup";
 import { projectPath } from "@/lib/slug";
+import SectionHeading from "./SectionHeading";
 
 // ============================================
 // Project Card
@@ -170,13 +171,12 @@ export default function Projects({
         viewport={{ once: true }}
         transition={{ duration: 0.5 }}
       >
-        <h2 className="mb-12 flex items-center gap-4 text-3xl font-bold text-slate-900 dark:text-slate-100">
-          <span className="font-mono text-xl text-cyan-600 dark:text-cyan-400">
-            02.
-          </span>{" "}
-          Proyek
-          <div className="ml-4 h-px max-w-xs flex-grow bg-slate-300 dark:bg-slate-700"></div>
-        </h2>
+        <SectionHeading
+          index="02"
+          code="Operations"
+          title="Proyek"
+          kicker="Case study pilihan — dari masalah, eksekusi, sampai dampaknya."
+        />
 
         {projects.length === 0 ? (
           <p className="text-sm text-slate-500 dark:text-slate-400">

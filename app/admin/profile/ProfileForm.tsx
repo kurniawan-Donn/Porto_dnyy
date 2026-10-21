@@ -14,6 +14,8 @@ import {
   MapPin,
   Link as LinkIcon,
   Megaphone,
+  Monitor,
+  Trash2,
 } from "lucide-react";
 import { uploadFile } from "@/lib/supabase/storage";
 import { updateProfile } from "@/app/actions/profile";
@@ -28,11 +30,13 @@ export default function ProfileForm({
   const [isPending, startTransition] = useTransition();
   const [isUploadingPhoto, setIsUploadingPhoto] = useState(false);
   const [isUploadingCv, setIsUploadingCv] = useState(false);
+  const [isUploadingBanner, setIsUploadingBanner] = useState(false);
   const [status, setStatus] = useState<"idle" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
 
   const photoInputRef = useRef<HTMLInputElement>(null);
   const cvInputRef = useRef<HTMLInputElement>(null);
+  const bannerInputRef = useRef<HTMLInputElement>(null);
 
   // ============================================
   // Handle input change
@@ -81,6 +85,41 @@ export default function ProfileForm({
     } finally {
       setIsUploadingPhoto(false);
       if (photoInputRef.current) photoInputRef.current.value = "";
+    }
+  };
+
+  // ============================================
+  // Upload Banner Hero (gambar lebar untuk efek zoom)
+  // ============================================
+  const handleBannerUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      setStatus("error");
+      setMessage("Banner harus berupa gambar (JPG/PNG/WebP).");
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      setStatus("error");
+      setMessage("Ukuran banner maksimal 8 MB.");
+      return;
+    }
+
+    setIsUploadingBanner(true);
+    setStatus("idle");
+
+    try {
+      const url = await uploadFile(file, "banner");
+      setFormData((prev) => ({ ...prev, hero_banner_url: url }));
+      setStatus("success");
+      setMessage("Banner berhasil di-upload. Jangan lupa klik Save.");
+    } catch (err) {
+      setStatus("error");
+      setMessage(err instanceof Error ? err.message : "Upload gagal.");
+    } finally {
+      setIsUploadingBanner(false);
+      if (bannerInputRef.current) bannerInputRef.current.value = "";
     }
   };
 
@@ -394,6 +433,81 @@ export default function ProfileForm({
             </button>
           </div>
         </div>
+      </div>
+
+      {/* ============================================
+          BANNER HERO
+      ============================================ */}
+      <div className="bg-slate-900 border border-slate-800 rounded-xl p-6">
+        <div className="flex items-center gap-3 mb-5">
+          <div className="w-9 h-9 rounded-lg bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center text-cyan-400">
+            <Monitor size={18} />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-slate-100">Banner Hero</h2>
+            <p className="text-xs text-slate-500">
+              Gambar lebar 16:9 (min. 1920×1080), mis. meja kerja 3 monitor. Saat di-scroll,
+              kamera &ldquo;masuk&rdquo; ke tengah gambar. Kosongkan untuk latar grid.
+            </p>
+          </div>
+        </div>
+
+        <div className="relative bg-slate-950 border border-slate-800 rounded-lg overflow-hidden aspect-video mb-3 flex items-center justify-center">
+          {formData.hero_banner_url ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={formData.hero_banner_url}
+              alt="Banner Hero"
+              className="object-cover w-full h-full"
+            />
+          ) : (
+            <div className="text-slate-700 text-center">
+              <Monitor size={48} className="mx-auto mb-2 opacity-50" />
+              <p className="text-xs">Belum ada banner — Hero memakai latar grid</p>
+            </div>
+          )}
+          {/* Titik fokus zoom */}
+          <div className="pointer-events-none absolute left-1/2 top-[45%] h-6 w-6 -translate-x-1/2 -translate-y-1/2 rounded-full border border-cyan-400/70" />
+        </div>
+
+        <input
+          ref={bannerInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleBannerUpload}
+          className="hidden"
+        />
+
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => bannerInputRef.current?.click()}
+            disabled={isUploadingBanner}
+            className="flex-1 inline-flex items-center justify-center gap-2 border border-slate-700 hover:border-cyan-400/50 text-slate-300 hover:text-cyan-400 px-4 py-2.5 rounded-md text-sm font-medium transition-all disabled:opacity-60"
+          >
+            {isUploadingBanner ? (
+              <>
+                <Loader2 size={16} className="animate-spin" /> Uploading...
+              </>
+            ) : (
+              <>
+                <Upload size={16} /> Upload Banner
+              </>
+            )}
+          </button>
+          {formData.hero_banner_url && (
+            <button
+              type="button"
+              onClick={() => setFormData((prev) => ({ ...prev, hero_banner_url: null }))}
+              className="inline-flex items-center gap-2 border border-slate-700 hover:border-red-400/50 text-slate-400 hover:text-red-400 px-4 py-2.5 rounded-md text-sm font-medium transition-all"
+            >
+              <Trash2 size={16} /> Hapus
+            </button>
+          )}
+        </div>
+        <p className="mt-2 text-[11px] text-slate-500">
+          Lingkaran cyan menandai titik fokus zoom — letakkan monitor tengah di sekitar titik itu.
+        </p>
       </div>
 
       {/* ============================================
