@@ -33,7 +33,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   // Refresh cache halaman
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   revalidatePath("/admin/profile");
 
   return { success: true };

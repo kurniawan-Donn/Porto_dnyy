@@ -48,6 +48,8 @@ export type CaseStudy = {
 
 export type Project = {
   id: string;
+  // Nullable hanya sampai migration 20261022000000_project_slug.sql dijalankan
+  slug: string | null;
   title: string;
   description: string | null;
   tech: string[] | null;

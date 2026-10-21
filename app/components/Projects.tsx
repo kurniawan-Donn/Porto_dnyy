@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence } from "motion/react";
 import { ExternalLink, ArrowUpRight, Sparkles } from "lucide-react";
 import { SiGithub } from "react-icons/si";
 import type { Project, TechTag } from "@/lib/types";
 import TagPill from "./TagPill";
 import TagPopup from "./TagPopup";
-import CaseStudyModal, { hasCaseStudy } from "./CaseStudyModal";
+import { projectPath } from "@/lib/slug";
 
 // ============================================
 // Project Card
@@ -16,16 +17,14 @@ function ProjectCard({
   project,
   index,
   techTagsMap,
-  onOpenCaseStudy,
   onTagClick,
 }: {
   project: Project;
   index: number;
   techTagsMap: Map<string, TechTag>;
-  onOpenCaseStudy: (p: Project) => void;
   onTagClick: (t: TechTag) => void;
 }) {
-  const canOpen = hasCaseStudy(project);
+  const href = projectPath(project);
   const isFeatured = project.featured;
   const number = String(index + 1).padStart(2, "0");
 
@@ -45,14 +44,11 @@ function ProjectCard({
       />
 
       {project.image_url ? (
-        <button
-          type="button"
-          onClick={() => canOpen && onOpenCaseStudy(project)}
-          disabled={!canOpen}
-          className={`relative block w-full overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-950 ${
-            canOpen ? "cursor-pointer" : "cursor-default"
-          }`}
-          aria-label={canOpen ? `Buka case study ${project.title}` : undefined}
+        <Link
+          href={href}
+          tabIndex={-1}
+          aria-hidden="true"
+          className="relative block w-full overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-950"
         >
           <div
             className={`relative w-full overflow-hidden ${
@@ -67,7 +63,7 @@ function ProjectCard({
               loading="lazy"
             />
           </div>
-        </button>
+        </Link>
       ) : (
         <div
           className={`flex w-full items-center justify-center border-b border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-900 ${
@@ -83,7 +79,9 @@ function ProjectCard({
           <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400">{number}</span>
           <div className="min-w-0 flex-1">
             <h3 className="text-lg font-semibold leading-snug text-slate-900 sm:text-xl dark:text-slate-100">
-              {project.title}
+              <Link href={href} className="transition-colors hover:text-cyan-600 dark:hover:text-cyan-400">
+                {project.title}
+              </Link>
             </h3>
             {project.description && (
               <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
@@ -135,16 +133,13 @@ function ProjectCard({
             )}
           </div>
 
-          {canOpen && (
-            <button
-              type="button"
-              onClick={() => onOpenCaseStudy(project)}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-600 transition-all hover:gap-2.5 hover:text-cyan-500 dark:text-cyan-400 dark:hover:text-cyan-300"
-            >
-              {project.card_cta_text || "Lihat Studi Kasus"}
-              <ArrowUpRight size={14} />
-            </button>
-          )}
+          <Link
+            href={href}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-600 transition-all hover:gap-2.5 hover:text-cyan-500 dark:text-cyan-400 dark:hover:text-cyan-300"
+          >
+            {project.card_cta_text || "Lihat Studi Kasus"}
+            <ArrowUpRight size={14} />
+          </Link>
         </div>
       </div>
     </motion.article>
@@ -161,7 +156,6 @@ export default function Projects({
   projects: Project[];
   techTags: TechTag[];
 }) {
-  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [selectedTag, setSelectedTag] = useState<TechTag | null>(null);
 
   const techTagsMap = new Map(
@@ -196,22 +190,12 @@ export default function Projects({
                 project={project}
                 index={index}
                 techTagsMap={techTagsMap}
-                onOpenCaseStudy={setSelectedProject}
                 onTagClick={setSelectedTag}
               />
             ))}
           </div>
         )}
       </motion.div>
-
-      <AnimatePresence>
-        {selectedProject && (
-          <CaseStudyModal
-            project={selectedProject}
-            onClose={() => setSelectedProject(null)}
-          />
-        )}
-      </AnimatePresence>
 
       <AnimatePresence>
         {selectedTag && (

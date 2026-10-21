@@ -20,7 +20,7 @@ export async function createSkill(formData: FormData) {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/skills");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -44,7 +44,7 @@ export async function updateSkill(id: string, formData: FormData) {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/skills");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -59,6 +59,6 @@ export async function deleteSkill(id: string) {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/skills");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }

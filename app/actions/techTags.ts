@@ -23,7 +23,7 @@ export async function createTechTag(formData: FormData): Promise<ActionResult> {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/tech-tags");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -52,7 +52,7 @@ export async function updateTechTag(
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/tech-tags");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -64,6 +64,6 @@ export async function deleteTechTag(id: string): Promise<ActionResult> {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/tech-tags");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }

@@ -1,6 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Font OG image dibaca via fs (lib/og.tsx) — pastikan ikut ter-bundle
+  // saat OG image dibuat ulang di runtime (revalidate)
+  outputFileTracingIncludes: {
+    "/**": [
+      "./node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-400-normal.woff",
+      "./node_modules/@fontsource/jetbrains-mono/files/jetbrains-mono-latin-700-normal.woff",
+      "./node_modules/@fontsource/space-grotesk/files/space-grotesk-latin-700-normal.woff",
+    ],
+  },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [

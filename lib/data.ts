@@ -1,4 +1,6 @@
+import { cache } from "react";
 import { createPublicClient } from "@/lib/supabase/public";
+import { projectSlug } from "@/lib/slug";
 import type {
   Certification,
   Experience,
@@ -85,5 +87,44 @@ export async function getPortfolioData(): Promise<PortfolioData> {
     certifications,
     techTags: rows<TechTag>("tech_tags", tagsRes),
     stats,
+  };
+}
+
+// ============================================
+// Halaman project (/projects/[slug])
+// ============================================
+
+// cache(): generateMetadata, page, dan OG image dalam satu render
+// berbagi satu query yang sama
+export const getProjects = cache(async (): Promise<Project[]> => {
+  const supabase = createPublicClient();
+  const res = await supabase.from("projects").select("*").order("order_index", { ascending: true });
+  return rows<Project>("projects", res);
+});
+
+export const getTechTags = cache(async (): Promise<TechTag[]> => {
+  const supabase = createPublicClient();
+  return rows<TechTag>("tech_tags", await supabase.from("tech_tags").select("*"));
+});
+
+export type ProjectPageData = {
+  project: Project;
+  index: number;
+  total: number;
+  prev: Project | null;
+  next: Project | null;
+};
+
+export async function getProjectBySlug(slug: string): Promise<ProjectPageData | null> {
+  const projects = await getProjects();
+  const index = projects.findIndex((p) => projectSlug(p) === slug);
+  if (index === -1) return null;
+
+  return {
+    project: projects[index],
+    index,
+    total: projects.length,
+    prev: projects[index - 1] ?? null,
+    next: projects[index + 1] ?? null,
   };
 }

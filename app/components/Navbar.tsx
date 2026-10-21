@@ -1,5 +1,7 @@
 "use client";
 import { useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import ThemeToggle from "./ThemeToggle";
@@ -8,18 +10,26 @@ import { useSound } from "./SoundProvider";
 import { useActiveSection } from "../hooks/useActiveSection";
 
 const NAV_LINKS = [
-  { name: "Tentang", href: "#tentang", id: "tentang" },
-  { name: "Keahlian", href: "#keahlian", id: "keahlian" },
-  { name: "Pengalaman", href: "#pengalaman", id: "pengalaman" },
-  { name: "Proyek", href: "#proyek", id: "proyek" },
-  { name: "Sertifikasi", href: "#sertifikasi", id: "sertifikasi" },
-  { name: "Kontak", href: "#kontak", id: "kontak" },
+  { name: "Tentang", href: "/#tentang", id: "tentang" },
+  { name: "Keahlian", href: "/#keahlian", id: "keahlian" },
+  { name: "Pengalaman", href: "/#pengalaman", id: "pengalaman" },
+  { name: "Proyek", href: "/#proyek", id: "proyek" },
+  { name: "Sertifikasi", href: "/#sertifikasi", id: "sertifikasi" },
+  { name: "Kontak", href: "/#kontak", id: "kontak" },
 ];
 
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
-  const activeSection = useActiveSection(NAV_LINKS.map((l) => l.id));
+  const observedSection = useActiveSection(NAV_LINKS.map((l) => l.id));
   const { play } = useSound();
+  const pathname = usePathname();
+  const router = useRouter();
+  const isHome = pathname === "/";
+  const activeSection = isHome
+    ? observedSection
+    : pathname.startsWith("/projects")
+      ? "proyek"
+      : "";
 
   // ============================================
   // Programmatic scroll — lebih reliable di mobile
@@ -34,9 +44,15 @@ export default function Navbar() {
     // Tutup menu dulu
     setIsOpen(false);
 
+    // Di luar beranda (mis. /projects/...) → pindah ke beranda + anchor
+    if (!isHome) {
+      router.push(href);
+      return;
+    }
+
     // Delay sedikit agar animasi menu close tidak bentrok dengan scroll
     setTimeout(() => {
-      const id = href.replace("#", "");
+      const id = href.split("#")[1];
       const element = document.getElementById(id);
       if (element) {
         const navHeight = 80; // offset untuk navbar fixed
@@ -55,19 +71,20 @@ export default function Navbar() {
     <nav className="fixed w-full bg-white/80 dark:bg-slate-900/80 backdrop-blur-md z-50 border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
       <div className="max-w-5xl mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <a
-          href="#"
+        <Link
+          href="/"
           aria-label="Beranda - Dony Kurniawan"
           onMouseEnter={() => play("hover")}
           onClick={(e) => {
-            e.preventDefault();
             play("click");
+            if (!isHome) return;
+            e.preventDefault();
             window.scrollTo({ top: 0, behavior: "smooth" });
           }}
           className="text-xl font-bold tracking-widest text-cyan-600 dark:text-cyan-400"
         >
           DONY.
-        </a>
+        </Link>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-3">

@@ -25,7 +25,7 @@ export async function createExperience(fd: FormData) {
   const { error } = await sb.from("experiences").insert(buildPayload(fd));
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/experience");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -34,7 +34,7 @@ export async function updateExperience(id: string, fd: FormData) {
   const { error } = await sb.from("experiences").update(buildPayload(fd)).eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/experience");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }
 
@@ -43,6 +43,6 @@ export async function deleteExperience(id: string) {
   const { error } = await sb.from("experiences").delete().eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/experience");
-  revalidatePath("/");
+  revalidatePath("/", "layout");
   return { success: true };
 }

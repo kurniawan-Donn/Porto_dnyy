@@ -238,6 +238,21 @@ function ProjectFormModal({
           </div>
 
           <div>
+            <label className={labelCls}>Slug URL (opsional)</label>
+            <input
+              name="slug"
+              defaultValue={initialData?.slug ?? ""}
+              placeholder="otomatis dari judul, mis. sistem-informasi-audit-ti"
+              pattern="[a-z0-9]+(-[a-z0-9]+)*"
+              title="Huruf kecil, angka, dan tanda hubung saja"
+              className={`${inputCls} font-mono`}
+            />
+            <p className="mt-1.5 text-[11px] text-slate-500">
+              Alamat halaman: /projects/&lt;slug&gt;. Mengubah slug akan mematikan link lama yang sudah dibagikan.
+            </p>
+          </div>
+
+          <div>
             <label className={labelCls}>Deskripsi Singkat *</label>
             <textarea name="description" defaultValue={initialData?.description ?? ""} required rows={3} placeholder="Deskripsi singkat yang muncul di card..." className={`${inputCls} resize-none`} />
           </div>
