@@ -82,10 +82,10 @@ export const AUDIT_CONTROLS: AuditControl[] = [
   {
     id: "AC-03",
     title: "Pendaftaran akun publik dinonaktifkan",
-    status: "manual",
+    status: "pass",
     refs: ["ASVS V4.1", "ISO A.5.18"],
     evidence:
-      "Diatur di dashboard Supabase (Authentication → Sign up), bukan di kode — perlu bukti manual (screenshot) saat audit.",
+      "Sign-up publik dinonaktifkan di dashboard Supabase (Authentication → Sign up) sehingga tidak ada yang bisa membuat akun admin baru; diverifikasi manual 21 Oktober 2026.",
   },
   {
     id: "IV-01",
