@@ -16,7 +16,7 @@ export default async function CertificationsPage() {
         </p>
         <h1 className="text-3xl font-bold text-slate-100">Sertifikasi</h1>
         <p className="text-slate-500 text-sm mt-2">
-          Kelola daftar sertifikasi. Tombol "Lihat Kredensial" akan muncul di halaman publik kalau URL diisi.
+          Kelola daftar sertifikasi. Tombol &ldquo;Lihat Kredensial&rdquo; akan muncul di halaman publik kalau URL diisi.
         </p>
       </div>
       <CertificationsManager initialCertifications={certifications ?? []} />

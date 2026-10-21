@@ -7,6 +7,7 @@ import {
   type ReactNode,
 } from "react";
 import { playSound, startAmbient, stopAmbient } from "../hooks/useSound";
+import { useIsClient } from "../hooks/useIsClient";
 
 type SoundContextType = {
   isEnabled: boolean;
@@ -22,12 +23,13 @@ const SoundContext = createContext<SoundContextType>({
 
 export function SoundProvider({ children }: { children: ReactNode }) {
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsClient();
 
-  // Baca preferensi dari localStorage
+  // Baca preferensi dari localStorage setelah hydration (server tidak punya
+  // akses localStorage, jadi nilai awal harus false agar HTML-nya cocok)
   useEffect(() => {
-    setIsMounted(true);
     const saved = localStorage.getItem("sound-preference");
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sinkron sekali dari localStorage
     if (saved === "on") setIsEnabled(true);
   }, []);
 

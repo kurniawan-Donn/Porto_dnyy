@@ -5,7 +5,6 @@ import { Tags } from "lucide-react";
 
 import {
   LayoutDashboard,
-  FileText,
   FolderGit2,
   Briefcase,
   Award,

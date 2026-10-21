@@ -20,14 +20,7 @@ import {
 } from "@/app/actions/techTags";
 import SkillIconPicker from "@/app/components/admin/SkillIconPicker";
 import { TechIcon } from "@/lib/tech-icons";
-
-type TechTag = {
-  id: string;
-  name: string;
-  description: string | null;
-  icon: string | null;
-  category: string | null;
-};
+import type { TechTag } from "@/lib/types";
 
 // ============================================
 // Form

@@ -9,21 +9,7 @@ import {
   createExperience, updateExperience, deleteExperience,
 } from "@/app/actions/experience";
 import { uploadFile } from "@/lib/supabase/storage";
-
-type Experience = {
-  id: string;
-  position: string;
-  company: string;
-  period: string | null;
-  location: string | null;
-  description: string | null;
-  tags: string[] | null;
-  is_current: boolean | null;
-  order_index: number | null;
-  image_url: string | null;
-};
-
-type TechTag = { id: string; name: string; icon: string | null };
+import type { Experience, TechTag } from "@/lib/types";
 
 const inputCls =
   "w-full bg-slate-950/60 border border-slate-700 rounded-md px-4 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/30 transition-all";

@@ -1,15 +1,11 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/supabase/auth";
+import type { ActionResult } from "@/lib/types";
 import { revalidatePath } from "next/cache";
 
-export type ActionResult = {
-  success: boolean;
-  error?: string;
-};
-
 export async function createTechTag(formData: FormData): Promise<ActionResult> {
-  const supabase = await createClient();
+  const supabase = await requireAdmin();
 
   const payload = {
     name: formData.get("name") as string,
@@ -35,7 +31,7 @@ export async function updateTechTag(
   id: string,
   formData: FormData
 ): Promise<ActionResult> {
-  const supabase = await createClient();
+  const supabase = await requireAdmin();
 
   const payload = {
     name: formData.get("name") as string,
@@ -61,7 +57,7 @@ export async function updateTechTag(
 }
 
 export async function deleteTechTag(id: string): Promise<ActionResult> {
-  const supabase = await createClient();
+  const supabase = await requireAdmin();
 
   const { error } = await supabase.from("tech_tags").delete().eq("id", id);
 

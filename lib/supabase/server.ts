@@ -26,10 +26,7 @@ export async function createClient() {
   );
 
   // Cek session — kalau refresh token invalid, bersihkan cookie otomatis
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const { error } = await supabase.auth.getUser();
 
   if (
     error &&

@@ -17,24 +17,7 @@ import {
 } from "lucide-react";
 import { uploadFile } from "@/lib/supabase/storage";
 import { updateProfile } from "@/app/actions/profile";
-
-type SiteSettings = {
-  id: number;
-  hero_greeting: string;
-  hero_name: string;
-  hero_role: string;
-  hero_description: string;
-  hero_photo_url: string | null;
-  cv_url: string | null;
-  email: string | null;
-  location: string | null;
-  github_url: string | null;
-  linkedin_url: string | null;
-  instagram_url: string | null;
-  banner_text: string | null;
-  banner_active: boolean;
-  updated_at: string;
-};
+import type { SiteSettings } from "@/lib/types";
 
 export default function ProfileForm({
   initialData,
@@ -247,7 +230,7 @@ export default function ProfileForm({
               <input
                 type="text"
                 name="hero_greeting"
-                value={formData.hero_greeting}
+                value={formData.hero_greeting ?? ""}
                 onChange={handleChange}
                 placeholder="Halo, nama saya"
                 className={inputClass}
@@ -258,7 +241,7 @@ export default function ProfileForm({
               <input
                 type="text"
                 name="hero_name"
-                value={formData.hero_name}
+                value={formData.hero_name ?? ""}
                 onChange={handleChange}
                 placeholder="Dony Kurniawan."
                 className={inputClass}
@@ -271,7 +254,7 @@ export default function ProfileForm({
             <input
               type="text"
               name="hero_role"
-              value={formData.hero_role}
+              value={formData.hero_role ?? ""}
               onChange={handleChange}
               placeholder="IT Audit & Web Developer."
               className={inputClass}
@@ -282,7 +265,7 @@ export default function ProfileForm({
             <label className={labelClass}>Deskripsi Singkat</label>
             <textarea
               name="hero_description"
-              value={formData.hero_description}
+              value={formData.hero_description ?? ""}
               onChange={handleChange}
               rows={4}
               placeholder="Ceritakan tentang diri Anda..."

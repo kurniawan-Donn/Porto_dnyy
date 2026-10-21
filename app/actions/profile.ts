@@ -1,17 +1,10 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
 
 export async function updateProfile(formData: FormData) {
-  const supabase = await createClient();
-
-  // Pastikan user sudah login
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/admin/login");
+  const supabase = await requireAdmin();
 
   const data = {
     hero_greeting: formData.get("hero_greeting") as string,

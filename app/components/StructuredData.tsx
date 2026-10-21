@@ -1,9 +1,10 @@
+import { SITE_NAME, SITE_URL } from "@/lib/site";
+
 export default function StructuredData() {
-  const SITE_URL = "https://donykurniawan.vercel.app"; // ✏️ Ganti setelah deploy
   const data = {
     "@context": "https://schema.org",
     "@type": "Person",
-    name: "Dony Kurniawan",
+    name: SITE_NAME,
     url: SITE_URL,
     jobTitle: "IT Audit & Web Developer",
     alumniOf: {

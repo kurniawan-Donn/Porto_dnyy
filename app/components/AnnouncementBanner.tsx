@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Megaphone, X } from "lucide-react";
+import { useIsClient } from "../hooks/useIsClient";
 
 type Props = {
   text: string | null;
@@ -11,10 +12,9 @@ type Props = {
 
 export default function AnnouncementBanner({ text, active, version }: Props) {
   const [isVisible, setIsVisible] = useState(false);
-  const [isMounted, setIsMounted] = useState(false);
+  const isMounted = useIsClient();
 
   useEffect(() => {
-    setIsMounted(true);
     if (!active || !text || text.trim() === "") return;
 
     // Key berbeda tiap kali banner di-update

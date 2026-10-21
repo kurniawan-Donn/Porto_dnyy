@@ -1,18 +1,10 @@
 "use client";
 import { motion } from "motion/react";
 import { ArrowRight, Download, Eye } from "lucide-react";
+import type { SiteSettings } from "@/lib/types";
 import ProfilePhoto from "./ProfilePhoto";
 
-type SiteSettings = {
-  hero_greeting: string | null;
-  hero_name: string | null;
-  hero_role: string | null;
-  hero_description: string | null;
-  hero_photo_url: string | null;
-  cv_url: string | null;
-} | null;
-
-export default function Hero({ settings }: { settings: SiteSettings }) {
+export default function Hero({ settings }: { settings: SiteSettings | null }) {
   // Fallback kalau data belum ada
   const greeting = settings?.hero_greeting || "Halo, nama saya";
   const name = settings?.hero_name || "Dony Kurniawan.";

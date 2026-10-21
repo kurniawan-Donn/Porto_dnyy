@@ -4,17 +4,10 @@ import { useEffect } from "react";
 import { motion } from "motion/react";
 import { X } from "lucide-react";
 import { TechIcon } from "@/lib/tech-icons";
-
-export type TagData = {
-  id?: string;
-  name: string;
-  icon: string | null;
-  description: string | null;
-  category: string | null;
-};
+import type { TechTag } from "@/lib/types";
 
 type TagPopupProps = {
-  tag: TagData;
+  tag: Pick<TechTag, "name" | "icon" | "description" | "category">;
   onClose: () => void;
 };
 

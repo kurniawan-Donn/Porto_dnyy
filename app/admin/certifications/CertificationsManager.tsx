@@ -3,39 +3,15 @@ import { useState, useTransition, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Pencil, Trash2, Save, X, Loader2, CheckCircle2, AlertCircle,
-  Award, ShieldCheck, Code2, BadgeCheck, Trophy, Medal, Star, BookOpen,
   Upload, Image as ImageIcon,
 } from "lucide-react";
 import {
   createCertification, updateCertification, deleteCertification,
 } from "@/app/actions/certifications";
 import { uploadFile } from "@/lib/supabase/storage";
+import { CERT_ICON_OPTIONS as ICON_OPTIONS, getCertIcon } from "@/lib/lucide-icons";
+import type { Certification } from "@/lib/types";
 
-type Certification = {
-  id: string;
-  name: string;
-  issuer: string | null;
-  date: string | null;
-  credential_url: string | null;
-  icon_name: string | null;
-  order_index: number | null;
-  image_url: string | null;
-};
-
-const ICON_OPTIONS = [
-  { name: "Award", icon: Award },
-  { name: "ShieldCheck", icon: ShieldCheck },
-  { name: "Code2", icon: Code2 },
-  { name: "BadgeCheck", icon: BadgeCheck },
-  { name: "Trophy", icon: Trophy },
-  { name: "Medal", icon: Medal },
-  { name: "Star", icon: Star },
-  { name: "BookOpen", icon: BookOpen },
-];
-
-const ICON_MAP: Record<string, any> = Object.fromEntries(
-  ICON_OPTIONS.map((o) => [o.name, o.icon])
-);
 
 const inputCls =
   "w-full bg-slate-950/60 border border-slate-700 rounded-md px-4 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/30 transition-all";
@@ -94,7 +70,7 @@ export default function CertificationsManager({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {certs.map((cert) => {
-          const Icon = ICON_MAP[cert.icon_name || "Award"] || Award;
+          const Icon = getCertIcon(cert.icon_name);
           return (
             <div
               key={cert.id}
@@ -356,7 +332,7 @@ function CertificationFormModal({
               className={inputCls}
             />
             <p className="text-xs text-slate-600 mt-2">
-              Kosongkan kalau tidak ada link. Tombol akan jadi "Segera Hadir".
+              Kosongkan kalau tidak ada link. Tombol akan jadi &ldquo;Segera Hadir&rdquo;.
             </p>
           </div>
 

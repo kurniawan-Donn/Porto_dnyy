@@ -1,31 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "motion/react";
-import * as Icons from "lucide-react";
+import { motion } from "motion/react";
+import { ArrowUpRight, Maximize2 } from "lucide-react";
 import ImageLightbox from "@/components/ui/ImageLightbox";
-
-// ============================================
-// Types
-// ============================================
-type Certification = {
-  id: string;
-  name: string;
-  issuer: string;
-  date: string;
-  credential_url?: string | null;
-  icon_name?: string | null;
-  image_url?: string | null;
-};
+import { getCertIcon } from "@/lib/lucide-icons";
+import type { Certification } from "@/lib/types";
 
 // ============================================
 // Komponen Utama Certifications
 // ============================================
-export default function Certifications({
-  items = [],
-}: {
-  items?: Certification[];
-}) {
+export default function Certifications({ items }: { items: Certification[] }) {
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState("");
 
@@ -59,10 +44,8 @@ export default function Certifications({
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((cert, index) => {
-              const Icon =
-                (cert.icon_name &&
-                  (Icons as any)[cert.icon_name as keyof typeof Icons]) ||
-                Icons.Award;
+              const Icon = getCertIcon(cert.icon_name);
+              const meta = [cert.issuer, cert.date].filter(Boolean).join(" · ");
 
               return (
                 <motion.div
@@ -105,7 +88,7 @@ export default function Certifications({
                           className="pointer-events-none absolute bottom-2 right-2 flex items-center gap-1 rounded-full border border-slate-300 dark:border-slate-700 bg-white/90 dark:bg-slate-950/80 px-2.5 py-1 text-[10px] font-medium text-slate-600 dark:text-slate-300 opacity-0 backdrop-blur-sm transition-opacity duration-300 group-hover/img:opacity-100"
                           aria-hidden="true"
                         >
-                          <Icons.Maximize2 size={11} />
+                          <Maximize2 size={11} />
                           Perbesar
                         </span>
                       </button>
@@ -123,9 +106,11 @@ export default function Certifications({
                         {cert.name}
                       </h3>
 
-                      <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-400">
-                        {cert.issuer} · {cert.date}
-                      </p>
+                      {meta && (
+                        <p className="mt-1.5 text-sm text-slate-600 dark:text-slate-400">
+                          {meta}
+                        </p>
+                      )}
 
                       {cert.credential_url && (
                         <a
@@ -134,7 +119,7 @@ export default function Certifications({
                           rel="noopener noreferrer"
                           className="mt-auto inline-flex items-center gap-1 pt-4 text-sm text-cyan-600 dark:text-cyan-400 hover:text-cyan-700 dark:hover:text-cyan-300 transition-colors"
                         >
-                          Lihat Kredensial <Icons.ArrowUpRight size={14} />
+                          Lihat Kredensial <ArrowUpRight size={14} />
                         </a>
                       )}
                     </div>

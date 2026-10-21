@@ -4,6 +4,7 @@ import ThemeProvider from "./components/ThemeProvider";
 import StructuredData from "./components/StructuredData";
 import { SoundProvider } from "./components/SoundProvider";
 import "./globals.css";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_TITLE, SITE_URL } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,18 +18,10 @@ const geistMono = Geist_Mono({
   display: "swap",
 });
 
-// ============================================
-// ✏️ GANTI dengan domain asli setelah deploy
-// ============================================
-const SITE_URL = "https://donykurniawan.vercel.app";
-const SITE_NAME = "Dony Kurniawan";
-const SITE_DESCRIPTION =
-  "Portofolio Dony Kurniawan — Mahasiswa IT Politeknik Negeri Madiun yang berfokus pada IT Audit dan Web Development.";
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} | IT Audit & Web Developer`,
+    default: SITE_TITLE,
     template: `%s | ${SITE_NAME}`,
   },
   description: SITE_DESCRIPTION,
@@ -51,7 +44,7 @@ export const metadata: Metadata = {
     locale: "id_ID",
     url: SITE_URL,
     siteName: SITE_NAME,
-    title: `${SITE_NAME} | IT Audit & Web Developer`,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     images: [
       {
@@ -64,7 +57,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME} | IT Audit & Web Developer`,
+    title: SITE_TITLE,
     description: SITE_DESCRIPTION,
     images: ["/og-image.png"],
   },

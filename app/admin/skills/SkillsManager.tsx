@@ -13,21 +13,12 @@ import {
   Code2,
   Smartphone,
   ShieldCheck,
-  Layers,
 } from "lucide-react";
 import { createSkill, updateSkill, deleteSkill } from "@/app/actions/skills";
 
 import SkillIconPicker from "@/app/components/admin/SkillIconPicker";
 import { TechIcon } from "@/lib/tech-icons";
-
-type Skill = {
-  id: string;
-  category: string;
-  name: string;
-  description: string | null;
-  icon: string | null;
-  order_index: number;
-};
+import type { Skill } from "@/lib/types";
 
 const CATEGORIES = [
   { name: "Web Development", icon: Code2 },

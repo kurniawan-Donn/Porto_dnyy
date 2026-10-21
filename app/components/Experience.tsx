@@ -1,41 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import {
-  Building2,
-  MapPin,
-  Calendar,
-  Loader2,
-  Briefcase,
-} from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
+import { Building2, MapPin, Calendar, Briefcase } from "lucide-react";
+import type { Experience, TechTag } from "@/lib/types";
 import TagPill from "./TagPill";
-import TagPopup, { type TagData } from "./TagPopup";
-
-// ============================================
-// Types
-// ============================================
-type Experience = {
-  id: string;
-  position: string;
-  company: string;
-  period: string;
-  location: string | null;
-  description: string | null;
-  tags: string[] | null;
-  is_current: boolean | null;
-  image_url: string | null;
-  order_index?: number;
-};
-
-type TechTag = {
-  id: string;
-  name: string;
-  icon: string | null;
-  description: string | null;
-  category: string | null;
-};
+import TagPopup from "./TagPopup";
 
 // ============================================
 // Experience Card
@@ -59,7 +29,7 @@ function ExperienceCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
-      className="group relative overflow-hidden rounded-xl border border-slate-700/60 bg-white/5 p-5 backdrop-blur-sm transition-all duration-300 hover:border-cyan-500/60 hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.4)] sm:p-6"
+      className="group relative overflow-hidden rounded-xl border border-slate-200 bg-white p-5 backdrop-blur-sm transition-all duration-300 hover:border-cyan-500/60 hover:shadow-[0_0_40px_-10px_rgba(6,182,212,0.4)] sm:p-6 dark:border-slate-700/60 dark:bg-white/5"
     >
       {/* Accent line */}
       <div
@@ -80,7 +50,7 @@ function ExperienceCard({
             />
           </div>
           ) : (
-          <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-400">
+          <div className="flex h-14 w-14 items-center justify-center rounded-lg border border-cyan-500/30 bg-cyan-500/10 text-cyan-600 dark:text-cyan-400">
             <Building2 size={22} />
           </div>
       )}
@@ -92,27 +62,27 @@ function ExperienceCard({
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="min-w-0">
               <div className="mb-1 flex items-center gap-2">
-                <span className="font-mono text-[10px] text-cyan-400">
+                <span className="font-mono text-[10px] text-cyan-600 dark:text-cyan-400">
                   {number}
                 </span>
                 {experience.is_current && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-cyan-400">
+                  <span className="inline-flex items-center gap-1 rounded-full border border-cyan-500/40 bg-cyan-500/10 px-2 py-0.5 font-mono text-[9px] uppercase tracking-wider text-cyan-600 dark:text-cyan-400">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400" />
                     Active
                   </span>
                 )}
               </div>
-              <h3 className="text-lg font-semibold leading-snug text-slate-100 sm:text-xl">
+              <h3 className="text-lg font-semibold leading-snug text-slate-900 sm:text-xl dark:text-slate-100">
                 {experience.position}
               </h3>
-              <p className="mt-0.5 text-sm text-cyan-400">
+              <p className="mt-0.5 text-sm text-cyan-600 dark:text-cyan-400">
                 {experience.company}
               </p>
             </div>
 
             {/* Meta: period + location */}
             <div className="flex flex-shrink-0 flex-col gap-1 text-right sm:items-end">
-              <div className="inline-flex items-center gap-1.5 font-mono text-[11px] text-slate-400">
+              <div className="inline-flex items-center gap-1.5 font-mono text-[11px] text-slate-500 dark:text-slate-400">
                 <Calendar size={11} />
                 {experience.period}
               </div>
@@ -127,14 +97,14 @@ function ExperienceCard({
 
           {/* Description */}
           {experience.description && (
-            <p className="mt-4 text-sm leading-relaxed text-slate-400">
+            <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
               {experience.description}
             </p>
           )}
 
           {/* Tags */}
           {experience.tags && experience.tags.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-1.5 border-t border-slate-800 pt-4">
+            <div className="mt-4 flex flex-wrap gap-1.5 border-t border-slate-200 pt-4 dark:border-slate-800">
               {experience.tags.map((tagName) => {
                 const tag = techTagsMap.get(tagName.toLowerCase());
                 return (
@@ -157,33 +127,14 @@ function ExperienceCard({
 // ============================================
 // Main Component
 // ============================================
-export default function Experience() {
-  const [experiences, setExperiences] = useState<Experience[]>([]);
-  const [techTags, setTechTags] = useState<TechTag[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [selectedTag, setSelectedTag] = useState<TagData | null>(null);
-
-  // Fetch experiences + tech tags
-  useEffect(() => {
-    const fetchData = async () => {
-      const supabase = createClient();
-
-      const [expRes, tagsRes] = await Promise.all([
-        supabase
-          .from("experiences")
-          .select("*")
-          .order("order_index", { ascending: true, nullsFirst: false }),
-        supabase.from("tech_tags").select("*"),
-      ]);
-
-      if (expRes.data) setExperiences(expRes.data);
-      if (tagsRes.data) setTechTags(tagsRes.data);
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, []);
+export default function Experience({
+  experiences,
+  techTags,
+}: {
+  experiences: Experience[];
+  techTags: TechTag[];
+}) {
+  const [selectedTag, setSelectedTag] = useState<TechTag | null>(null);
 
   // Map lowercase tech name -> TechTag
   const techTagsMap = new Map(
@@ -207,15 +158,10 @@ export default function Experience() {
           <div className="ml-4 h-px max-w-xs flex-grow bg-slate-300 dark:bg-slate-700"></div>
         </h2>
 
-        {/* Loading */}
-        {isLoading ? (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="animate-spin text-cyan-400" size={28} />
-          </div>
-        ) : experiences.length === 0 ? (
+        {experiences.length === 0 ? (
           /* Empty state */
-          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-700 bg-slate-800/20 py-16 text-center">
-            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-slate-700 bg-slate-800/50 text-slate-500">
+          <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-slate-300 bg-slate-100/60 py-16 text-center dark:border-slate-700 dark:bg-slate-800/20">
+            <div className="mb-3 flex h-12 w-12 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-800/50">
               <Briefcase size={20} />
             </div>
             <p className="text-sm text-slate-500 dark:text-slate-400">
@@ -270,7 +216,7 @@ export default function Experience() {
                     <span className="absolute inset-0 -m-1.5 animate-pulse rounded-full bg-cyan-500/30 blur-sm" />
 
                     {/* Middle ring (cutout dari garis) */}
-                    <span className="relative flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-900 ring-4 ring-slate-900 dark:bg-slate-950 dark:ring-slate-950">
+                    <span className="relative flex h-3.5 w-3.5 items-center justify-center rounded-full bg-slate-50 ring-4 ring-slate-50 dark:bg-slate-950 dark:ring-slate-950">
                       {/* Inner cyan core */}
                       <span className="h-2 w-2 rounded-full bg-cyan-400 shadow-[0_0_8px_2px_rgba(6,182,212,0.8)]" />
                     </span>

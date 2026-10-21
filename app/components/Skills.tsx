@@ -9,19 +9,7 @@ import {
   X,
   type LucideIcon,
 } from "lucide-react";
-import { createClient } from "@/lib/supabase/client";
-
-// ============================================
-// Types
-// ============================================
-type Skill = {
-  id: string;
-  category: string;
-  name: string;
-  description: string | null;
-  icon: string | null;
-  order_index: number;
-};
+import type { Skill } from "@/lib/types";
 
 const CATEGORY_ICONS: Record<string, LucideIcon> = {
   "Web Development": Code2,
@@ -112,28 +100,8 @@ function SkillPopup({
 // ============================================
 // Komponen Utama Skills
 // ============================================
-export default function Skills() {
-  const [skills, setSkills] = useState<Skill[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
+export default function Skills({ skills }: { skills: Skill[] }) {
   const [selectedSkill, setSelectedSkill] = useState<Skill | null>(null);
-
-  // Fetch dari Supabase
-  useEffect(() => {
-    const fetchSkills = async () => {
-      const supabase = createClient();
-      const { data, error } = await supabase
-        .from("skills")
-        .select("*")
-        .order("category", { ascending: true })
-        .order("order_index", { ascending: true });
-
-      if (!error && data) {
-        setSkills(data);
-      }
-      setIsLoading(false);
-    };
-    fetchSkills();
-  }, []);
 
   // Group by category
   const categories = Array.from(new Set(skills.map((s) => s.category)));
@@ -159,16 +127,10 @@ export default function Skills() {
           <div className="h-px bg-slate-300 dark:bg-slate-700 flex-grow ml-4 max-w-xs"></div>
         </h2>
 
-        {isLoading ? (
-          // Loading skeleton
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="bg-slate-100 dark:bg-slate-800/50 rounded-lg border border-slate-200 dark:border-slate-700 p-6 animate-pulse h-64"
-              />
-            ))}
-          </div>
+        {skills.length === 0 ? (
+          <p className="text-sm text-slate-500 dark:text-slate-400">
+            Belum ada keahlian. Tambahkan melalui admin panel.
+          </p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {grouped.map((group, groupIndex) => {

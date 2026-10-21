@@ -1,17 +1,15 @@
 "use client";
-import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { Moon, Sun } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
+import { useIsClient } from "../hooks/useIsClient";
 import { useSound } from "./SoundProvider";
 
 export default function ThemeToggle() {
   const { theme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
-  const { play } = useSound();
-
   // Hindari hydration mismatch
-  useEffect(() => setMounted(true), []);
+  const mounted = useIsClient();
+  const { play } = useSound();
 
   if (!mounted) {
     return <div className="w-9 h-9 md:w-10 md:h-10" aria-hidden />;

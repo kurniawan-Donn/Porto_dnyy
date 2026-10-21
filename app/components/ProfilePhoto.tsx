@@ -246,7 +246,7 @@ export default function ProfilePhoto({ photoUrl }: { photoUrl?: string | null })
         <div className="flex items-center gap-2 font-mono text-[9px] sm:text-[10px] tracking-widest text-cyan-600 dark:text-cyan-400">
           <span className="text-slate-500 dark:text-slate-500">ID:</span>
           <span>DNY-2025</span>
-          <span className="text-slate-400 dark:text-slate-600">//</span>
+          <span className="text-slate-400 dark:text-slate-600">{"//"}</span>
           <span className="text-slate-500 dark:text-slate-500">STATUS:</span>
           <span className="flex items-center gap-1.5">
             <span

@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { getPortfolioData } from "@/lib/data";
 import SkipLink from "./components/SkipLink";
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
@@ -14,24 +14,14 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AnnouncementBanner from "./components/AnnouncementBanner";
 
-
-// Force dynamic — supaya setiap load fetch fresh dari Supabase
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: halaman di-cache dan dibangun ulang paling lama tiap 1 jam.
+// Setiap simpan dari admin memanggil revalidatePath("/"), jadi perubahan
+// tetap langsung tampil tanpa harus menunggu.
+export const revalidate = 3600;
 
 export default async function Home() {
-  const supabase = await createClient();
-
-  const { data: settings } = await supabase
-    .from("site_settings")
-    .select("*")
-    .eq("id", 1)
-    .single();
-
-  const { data: certifications } = await supabase
-    .from("certifications")
-    .select("*")
-    .order("date", { ascending: false });
+  const { settings, skills, projects, experiences, certifications, techTags, stats } =
+    await getPortfolioData();
 
   return (
     <>
@@ -45,16 +35,16 @@ export default async function Home() {
       >
         <Navbar />
         <AnnouncementBanner
-        text={settings?.banner_text ?? null}
-        active={settings?.banner_active ?? false}
-        version={settings?.updated_at ?? null}
+          text={settings?.banner_text ?? null}
+          active={settings?.banner_active ?? false}
+          version={settings?.updated_at ?? null}
         />
         <Hero settings={settings} />
-        <StatsCounter />
-        <Skills />
-        <Projects />
-        <Experience />
-        <Certifications items={certifications ?? []} />
+        <StatsCounter stats={stats} />
+        <Skills skills={skills} />
+        <Projects projects={projects} techTags={techTags} />
+        <Experience experiences={experiences} techTags={techTags} />
+        <Certifications items={certifications} />
         <Contact settings={settings} />
         <Footer />
       </main>

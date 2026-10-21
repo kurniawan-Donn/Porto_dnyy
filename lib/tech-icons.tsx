@@ -44,7 +44,6 @@ import {
   Image as ImageIcon,
   Presentation,
   Music,
-  Cloud,
   Shuffle,
 } from "lucide-react";
 

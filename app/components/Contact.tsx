@@ -2,6 +2,7 @@
 import { useState, type FormEvent, type ChangeEvent, type ReactNode } from "react";
 import { motion } from "motion/react";
 import { Mail, MapPin, Send, Loader2, CheckCircle2, AlertCircle } from "lucide-react";
+import type { SiteSettings } from "@/lib/types";
 import { useSound } from "./SoundProvider";
 
 // ============================================
@@ -32,13 +33,10 @@ const InstagramIcon = ({ size = 20, className = "" }: { size?: number; className
 // ============================================
 // Types
 // ============================================
-type ContactSettings = {
-  email: string | null;
-  location: string | null;
-  github_url: string | null;
-  linkedin_url: string | null;
-  instagram_url: string | null;
-} | null;
+type ContactSettings = Pick<
+  SiteSettings,
+  "email" | "location" | "github_url" | "linkedin_url" | "instagram_url"
+> | null;
 
 type Social = {
   name: string;
@@ -47,6 +45,9 @@ type Social = {
 };
 
 type Status = "idle" | "loading" | "success" | "error";
+
+// `website` adalah honeypot anti-bot: disembunyikan dari manusia, bot biasanya mengisinya
+const EMPTY_FORM = { name: "", email: "", subject: "", message: "", website: "" };
 
 // ============================================
 // Komponen Utama
@@ -77,7 +78,7 @@ export default function Contact({ settings }: { settings: ContactSettings }) {
     ].filter(Boolean) as Social[],
   };
 
-  const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
+  const [form, setForm] = useState(EMPTY_FORM);
   const [status, setStatus] = useState<Status>("idle");
   const [errorMsg, setErrorMsg] = useState("");
 
@@ -115,7 +116,7 @@ export default function Contact({ settings }: { settings: ContactSettings }) {
       if (!res.ok) throw new Error(data.error || "Gagal mengirim pesan.");
       setStatus("success");
       play("success");
-      setForm({ name: "", email: "", subject: "", message: "" });
+      setForm(EMPTY_FORM);
       setTimeout(() => setStatus("idle"), 5000);
     } catch (err) {
       setStatus("error");
@@ -238,6 +239,18 @@ export default function Contact({ settings }: { settings: ContactSettings }) {
               className="relative bg-white dark:bg-slate-800/40 border border-slate-200 dark:border-slate-700 rounded-xl p-6 md:p-8 space-y-5 overflow-hidden"
             >
               <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500/60 dark:via-cyan-400/60 to-transparent" />
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={form.website}
+                  onChange={handleChange}
+                />
+              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>

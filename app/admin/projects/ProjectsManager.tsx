@@ -9,22 +9,7 @@ import {
   createProject, updateProject, deleteProject,
 } from "@/app/actions/projects";
 import { uploadFile } from "@/lib/supabase/storage";
-
-type Project = {
-  id: string;
-  title: string;
-  description: string | null;
-  tech: string[] | null;
-  github_url: string | null;
-  demo_url: string | null;
-  image_url: string | null;
-  featured: boolean | null;
-  card_cta_text: string | null;
-  order_index: number | null;
-  case_study: any;
-};
-
-type TechTag = { id: string; name: string; icon: string | null };
+import type { Project, TechTag } from "@/lib/types";
 
 const inputCls = "w-full bg-slate-950/60 border border-slate-700 rounded-md px-4 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/30 transition-all";
 const labelCls = "block text-xs font-mono uppercase tracking-wider text-slate-400 mb-2";

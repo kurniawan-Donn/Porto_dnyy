@@ -3,48 +3,12 @@ import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Pencil, Trash2, Save, X, Loader2, CheckCircle2, AlertCircle,
-  FolderGit2, Award, Calendar, Cpu, Briefcase, Users, Star, Trophy,
-  Code2, Zap, Target, Rocket, Layers, TrendingUp, Link as LinkIcon,
+  Link as LinkIcon,
 } from "lucide-react";
 import { createStat, updateStat, deleteStat } from "@/app/actions/stats";
+import { STAT_ICON_OPTIONS as ICON_OPTIONS, getStatIcon } from "@/lib/lucide-icons";
+import type { Stat, StatCounts as Counts } from "@/lib/types";
 
-type Stat = {
-  id: string;
-  label: string;
-  value: number;
-  suffix: string | null;
-  icon_name: string | null;
-  order_index: number | null;
-  auto_source: string | null;
-};
-
-type Counts = {
-  projects: number;
-  certifications: number;
-  experiences: number;
-  skills: number;
-};
-
-const ICON_OPTIONS = [
-  { name: "FolderGit2", icon: FolderGit2 },
-  { name: "Award", icon: Award },
-  { name: "Calendar", icon: Calendar },
-  { name: "Cpu", icon: Cpu },
-  { name: "Briefcase", icon: Briefcase },
-  { name: "Users", icon: Users },
-  { name: "Star", icon: Star },
-  { name: "Trophy", icon: Trophy },
-  { name: "Code2", icon: Code2 },
-  { name: "Zap", icon: Zap },
-  { name: "Target", icon: Target },
-  { name: "Rocket", icon: Rocket },
-  { name: "Layers", icon: Layers },
-  { name: "TrendingUp", icon: TrendingUp },
-];
-
-const ICON_MAP: Record<string, any> = Object.fromEntries(
-  ICON_OPTIONS.map((o) => [o.name, o.icon])
-);
 
 const AUTO_SOURCE_OPTIONS = [
   { value: "none", label: "Manual (isi angka sendiri)" },
@@ -115,7 +79,7 @@ export default function StatsManager({
               Auto-Count Feature
             </p>
             Pilih <strong className="text-slate-200">auto_source</strong> untuk
-            sync otomatis. Contoh: kalau pilih "Jumlah Proyek", angka akan
+            sync otomatis. Contoh: kalau pilih &ldquo;Jumlah Proyek&rdquo;, angka akan
             otomatis menyesuaikan jumlah proyek di database. Saat ini: <br />
             <span className="text-cyan-400 font-mono">
               {counts.projects} proyek • {counts.certifications} sertifikasi •{" "}
@@ -134,7 +98,7 @@ export default function StatsManager({
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {stats.map((s) => {
-          const Icon = ICON_MAP[s.icon_name || "FolderGit2"] || FolderGit2;
+          const Icon = getStatIcon(s.icon_name);
           // Preview real value kalau auto
           const displayValue = s.auto_source
             ? counts[s.auto_source as keyof Counts] ?? s.value

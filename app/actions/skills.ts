@@ -1,26 +1,13 @@
 "use server";
 
-import { createClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-
-// ============================================
-// AUTH GUARD
-// ============================================
-async function requireAuth() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) redirect("/admin/login");
-  return supabase;
-}
 
 // ============================================
 // CREATE
 // ============================================
 export async function createSkill(formData: FormData) {
-  const supabase = await requireAuth();
+  const supabase = await requireAdmin();
 
   const { error } = await supabase.from("skills").insert({
     category: formData.get("category") as string,
@@ -41,7 +28,7 @@ export async function createSkill(formData: FormData) {
 // UPDATE
 // ============================================
 export async function updateSkill(id: string, formData: FormData) {
-  const supabase = await requireAuth();
+  const supabase = await requireAdmin();
 
   const { error } = await supabase
     .from("skills")
@@ -65,7 +52,7 @@ export async function updateSkill(id: string, formData: FormData) {
 // DELETE
 // ============================================
 export async function deleteSkill(id: string) {
-  const supabase = await requireAuth();
+  const supabase = await requireAdmin();
 
   const { error } = await supabase.from("skills").delete().eq("id", id);
 

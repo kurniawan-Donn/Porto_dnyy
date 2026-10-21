@@ -6,6 +6,7 @@ let audioContext: AudioContext | null = null;
 let ambientNodes: {
   osc1: OscillatorNode;
   osc2: OscillatorNode;
+  osc3: OscillatorNode;
   lfo: OscillatorNode;
   lfoGain: GainNode;
   masterGain: GainNode;
@@ -18,7 +19,8 @@ const getAudioContext = (): AudioContext | null => {
   if (typeof window === "undefined") return null;
   if (!audioContext) {
     const AudioContextClass =
-      window.AudioContext || (window as any).webkitAudioContext;
+      window.AudioContext ||
+      (window as Window & { webkitAudioContext?: typeof AudioContext }).webkitAudioContext;
     if (!AudioContextClass) return null;
     audioContext = new AudioContextClass();
   }
@@ -186,14 +188,9 @@ export const startAmbient = () => {
   osc3.start();
   lfo.start();
 
-  ambientNodes = { osc1, osc2, lfo, lfoGain, masterGain };
-
-  // Simpan osc3 di masterGain untuk cleanup nanti
-  (ambientNodes as any).osc3 = osc3;
-  (ambientNodes as any).gain1 = gain1;
-  (ambientNodes as any).gain2 = gain2;
-  (ambientNodes as any).gain3 = gain3;
-  (ambientNodes as any).filter = filter;
+  // Cukup simpan oscillator & gain yang perlu dihentikan/di-fade;
+  // node lain ikut dibersihkan GC setelah oscillator berhenti
+  ambientNodes = { osc1, osc2, osc3, lfo, lfoGain, masterGain };
 };
 
 export const stopAmbient = () => {
@@ -214,9 +211,8 @@ export const stopAmbient = () => {
     try {
       nodes.osc1.stop();
       nodes.osc2.stop();
+      nodes.osc3.stop();
       nodes.lfo.stop();
-      const osc3 = (nodes as any).osc3;
-      if (osc3) osc3.stop();
     } catch {
       // ignore if already stopped
     }
