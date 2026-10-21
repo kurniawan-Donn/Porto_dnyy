@@ -8,6 +8,7 @@ import { getProjectBySlug, getProjects, getTechTags } from "@/lib/data";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { projectPath, projectSlug } from "@/lib/slug";
 import type { CaseStudy, Project } from "@/lib/types";
+import { projectImageTransition, projectTitleTransition } from "@/lib/view-transitions";
 import Navbar from "@/app/components/Navbar";
 import Footer from "@/app/components/Footer";
 import SkipLink from "@/app/components/SkipLink";
@@ -169,7 +170,14 @@ export default async function ProjectPage({ params }: Props) {
               {cs.subtitle && <span className="text-slate-400 dark:text-slate-500"> — {cs.subtitle}</span>}
             </p>
             <h1 className="text-4xl leading-[1.05] font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-slate-50">
-              {project.title}
+              {/* Nama transisi berpasangan dengan kartu di beranda (useProjectTransition) */}
+              <span
+                className="vt-morph inline-block"
+                style={{ viewTransitionName: projectTitleTransition(project.id) }}
+                data-project-page={project.image_url ? undefined : project.id}
+              >
+                {project.title}
+              </span>
             </h1>
             {project.description && (
               <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-400">
@@ -207,7 +215,11 @@ export default async function ProjectPage({ params }: Props) {
 
           {/* Gambar */}
           {project.image_url && (
-            <div className="relative mb-12 aspect-[16/9] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-[0_0_60px_-20px_rgba(6,182,212,0.35)] dark:border-slate-700/60 dark:bg-slate-950">
+            <div
+              className="vt-morph relative mb-12 aspect-[16/9] w-full overflow-hidden rounded-xl border border-slate-200 bg-slate-100 shadow-[0_0_60px_-20px_rgba(6,182,212,0.35)] dark:border-slate-700/60 dark:bg-slate-950"
+              style={{ viewTransitionName: projectImageTransition(project.id) }}
+              data-project-page={project.id}
+            >
               <Image
                 src={project.image_url}
                 alt={`Tampilan ${project.title}`}

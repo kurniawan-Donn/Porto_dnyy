@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
+import DecryptText from "./DecryptText";
 
 /**
  * Heading section bergaya editorial/SOC:
  *   01 ── ARSENAL
  *   Keahlian & Teknologi
- * dengan angka besar ber-outline samar di latar.
+ * dengan angka besar ber-outline samar di latar. Kode & judul
+ * "terdekripsi" saat pertama kali terlihat.
  */
 export default function SectionHeading({
   index,
@@ -14,7 +16,7 @@ export default function SectionHeading({
 }: {
   index: string;
   code: string;
-  title: ReactNode;
+  title: string;
   kicker?: ReactNode;
 }) {
   return (
@@ -29,11 +31,11 @@ export default function SectionHeading({
       <p className="relative flex items-center gap-3 font-mono text-[11px] tracking-[0.3em] text-cyan-600 uppercase dark:text-cyan-400">
         <span className="tabular-nums">{index}</span>
         <span className="h-px w-10 bg-current opacity-50" aria-hidden="true" />
-        <span>{code}</span>
+        <DecryptText text={code} duration={600} />
       </p>
 
       <h2 className="relative mt-4 font-display text-4xl leading-[0.95] font-bold tracking-tight text-slate-900 sm:text-5xl md:text-6xl dark:text-slate-50">
-        {title}
+        <DecryptText text={title} />
       </h2>
 
       {kicker && (

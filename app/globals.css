@@ -69,6 +69,35 @@ body::after {
   }
 }
 
+/* ============================================
+   View transitions: kartu project → halaman case study
+   (app/hooks/useProjectTransition.ts)
+   ============================================ */
+.vt-morph {
+  view-transition-class: morph;
+}
+
+::view-transition-group(.morph) {
+  animation-duration: 450ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+::view-transition-image-pair(.morph) {
+  animation-name: via-blur;
+}
+
+@keyframes via-blur {
+  30% {
+    filter: blur(3px);
+  }
+}
+
+/* Crossfade halaman lainnya dibuat singkat agar morph yang jadi fokus */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 220ms;
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 10px;
@@ -112,6 +141,12 @@ section[id] {
 
 /* Hormati preferensi user yang tidak suka animasi */
 @media (prefers-reduced-motion: reduce) {
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
+  }
+
   *,
   *::before,
   *::after {

@@ -9,6 +9,7 @@ import type { Project, TechTag } from "@/lib/types";
 import TagPill from "./TagPill";
 import TagPopup from "./TagPopup";
 import { projectPath } from "@/lib/slug";
+import { useProjectTransition } from "../hooks/useProjectTransition";
 import SectionHeading from "./SectionHeading";
 
 // ============================================
@@ -26,6 +27,7 @@ function ProjectCard({
   onTagClick: (t: TechTag) => void;
 }) {
   const href = projectPath(project);
+  const { imageRef, titleRef, onClick } = useProjectTransition(project.id, href);
   const isFeatured = project.featured;
   const number = String(index + 1).padStart(2, "0");
 
@@ -47,12 +49,15 @@ function ProjectCard({
       {project.image_url ? (
         <Link
           href={href}
+          onClick={onClick}
           tabIndex={-1}
           aria-hidden="true"
           className="relative block w-full overflow-hidden border-b border-slate-200 bg-slate-100 dark:border-slate-700/60 dark:bg-slate-950"
         >
+          {/* Morph ke gambar besar di halaman case study (useProjectTransition) */}
           <div
-            className={`relative w-full overflow-hidden ${
+            ref={imageRef}
+            className={`vt-morph relative w-full overflow-hidden ${
               isFeatured ? "aspect-[21/9]" : "aspect-[16/10]"
             }`}
           >
@@ -80,8 +85,14 @@ function ProjectCard({
           <span className="font-mono text-xs text-cyan-600 dark:text-cyan-400">{number}</span>
           <div className="min-w-0 flex-1">
             <h3 className="text-lg font-semibold leading-snug text-slate-900 sm:text-xl dark:text-slate-100">
-              <Link href={href} className="transition-colors hover:text-cyan-600 dark:hover:text-cyan-400">
-                {project.title}
+              <Link
+                href={href}
+                onClick={onClick}
+                className="transition-colors hover:text-cyan-600 dark:hover:text-cyan-400"
+              >
+                <span ref={titleRef} className="vt-morph inline-block">
+                  {project.title}
+                </span>
               </Link>
             </h3>
             {project.description && (
@@ -136,6 +147,7 @@ function ProjectCard({
 
           <Link
             href={href}
+            onClick={onClick}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-cyan-600 transition-all hover:gap-2.5 hover:text-cyan-500 dark:text-cyan-400 dark:hover:text-cyan-300"
           >
             {project.card_cta_text || "Lihat Studi Kasus"}
