@@ -3,12 +3,13 @@ import { useState, useTransition, useRef } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import {
   Plus, Pencil, Trash2, Save, X, Loader2, CheckCircle2, AlertCircle,
-  Upload, Star, Image as ImageIcon,
+  Upload, Star,
 } from "lucide-react";
 import {
   createProject, updateProject, deleteProject,
 } from "@/app/actions/projects";
 import { uploadFile } from "@/lib/supabase/storage";
+import ProjectImagePreview, { RECOMMENDED_IMAGE } from "@/app/components/admin/ProjectImagePreview";
 import type { Project, TechTag } from "@/lib/types";
 
 const inputCls = "w-full bg-slate-950/60 border border-slate-700 rounded-md px-4 py-2.5 text-sm text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-cyan-400/60 focus:ring-1 focus:ring-cyan-400/30 transition-all";
@@ -157,6 +158,9 @@ function ProjectFormModal({
   const [error, setError] = useState("");
   const [isUploading, setIsUploading] = useState(false);
   const [imageUrl, setImageUrl] = useState(initialData?.image_url ?? "");
+  // Ukuran file hanya diketahui untuk gambar yang baru diunggah
+  const [imageSizeKb, setImageSizeKb] = useState<number | null>(null);
+  const [featured, setFeatured] = useState(initialData?.featured ?? false);
   const [techInput, setTechInput] = useState((initialData?.tech ?? []).join(", "));
   const isEditing = !!initialData;
   const fileRef = useRef<HTMLInputElement>(null);
@@ -173,6 +177,7 @@ function ProjectFormModal({
     try {
       const url = await uploadFile(file, "projects");
       setImageUrl(url);
+      setImageSizeKb(Math.round(file.size / 1024));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload gagal.");
     } finally {
@@ -259,26 +264,22 @@ function ProjectFormModal({
 
           {/* Image Upload */}
           <div>
-            <label className={labelCls}>Gambar Card (opsional)</label>
-            <div className="flex gap-4 items-start">
-              <div className="w-32 h-32 rounded-lg bg-slate-950 border border-slate-800 flex items-center justify-center overflow-hidden flex-shrink-0">
-                {imageUrl ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
-                ) : (
-                  <ImageIcon size={32} className="text-slate-700" />
-                )}
-              </div>
-              <div className="flex-1">
-                <input ref={fileRef} type="file" accept="image/*" onChange={handleUpload} className="hidden" />
-                <button type="button" onClick={() => fileRef.current?.click()} disabled={isUploading} className="inline-flex items-center gap-2 border border-slate-700 hover:border-cyan-400/50 text-slate-300 hover:text-cyan-400 px-4 py-2.5 rounded-md text-sm transition-all">
-                  {isUploading ? <><Loader2 size={16} className="animate-spin" /> Uploading...</> : <><Upload size={16} /> Upload Gambar</>}
-                </button>
-                {imageUrl && (
-                  <button type="button" onClick={() => setImageUrl("")} className="ml-2 text-xs text-red-400 hover:underline">Hapus</button>
-                )}
-                <p className="text-xs text-slate-600 mt-2">Format: JPG/PNG/WebP, max 5 MB</p>
-              </div>
+            <label className={labelCls}>Gambar Project (opsional)</label>
+            <p className="text-xs text-slate-400 mb-3 leading-relaxed">
+              Ideal <span className="font-mono text-cyan-400">{RECOMMENDED_IMAGE.width}×{RECOMMENDED_IMAGE.height} px (16:9)</span>,
+              WebP/JPG ≤ {RECOMMENDED_IMAGE.maxKb} KB. Gambar dipotong otomatis agar memenuhi kotak — letakkan
+              judul & elemen penting di dalam garis putus-putus <span className="text-cyan-400">area aman</span>.
+            </p>
+            <ProjectImagePreview imageUrl={imageUrl} featured={featured} fileSizeKb={imageSizeKb} />
+            <div className="mt-3 flex items-center gap-3">
+              <input ref={fileRef} type="file" accept="image/*" onChange={handleUpload} className="hidden" />
+              <button type="button" onClick={() => fileRef.current?.click()} disabled={isUploading} className="inline-flex items-center gap-2 border border-slate-700 hover:border-cyan-400/50 text-slate-300 hover:text-cyan-400 px-4 py-2.5 rounded-md text-sm transition-all">
+                {isUploading ? <><Loader2 size={16} className="animate-spin" /> Uploading...</> : <><Upload size={16} /> {imageUrl ? "Ganti Gambar" : "Upload Gambar"}</>}
+              </button>
+              {imageUrl && (
+                <button type="button" onClick={() => { setImageUrl(""); setImageSizeKb(null); }} className="text-xs text-red-400 hover:underline">Hapus</button>
+              )}
+              <p className="text-xs text-slate-600">JPG/PNG/WebP, max 5 MB</p>
             </div>
           </div>
 
@@ -321,7 +322,7 @@ function ProjectFormModal({
           </div>
 
           <label className="flex items-center gap-3 cursor-pointer group">
-            <input type="checkbox" name="featured" defaultChecked={initialData?.featured ?? false} className="w-4 h-4 accent-cyan-500 cursor-pointer" />
+            <input type="checkbox" name="featured" checked={featured} onChange={(e) => setFeatured(e.target.checked)} className="w-4 h-4 accent-cyan-500 cursor-pointer" />
             <span className="text-sm text-slate-300 group-hover:text-cyan-400 transition-colors flex items-center gap-2">
               <Star size={14} /> Tampilkan sebagai Featured (full-width)
             </span>
