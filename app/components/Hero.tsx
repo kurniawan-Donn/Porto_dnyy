@@ -73,28 +73,36 @@ export default function Hero({ settings }: { settings: SiteSettings | null }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
 
   // 0 → 1 selama "landasan" scroll Hero (section lebih tinggi dari layar,
-  // isinya sticky). Kamera zoom ke titik fokus, konten memudar ke atas,
-  // lalu layar larut ke warna latar section berikutnya.
+  // isinya sticky). Konten tetap utuh di awal, lalu memudar ke atas sambil
+  // kamera zoom ke titik fokus, dan layar larut ke section berikutnya.
+  //
+  // Setiap rentang SENGAJA ditulis lengkap 0 → 1: motion menjalankannya
+  // sebagai animasi ViewTimeline bawaan browser, dan keyframe yang berhenti
+  // sebelum 1 membuat browser mengembalikan nilai ke kondisi awal (konten
+  // muncul lagi di akhir scroll).
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end end"] });
   const backdropScale = useTransform(scrollYProgress, [0, 1], [1, bannerUrl ? 2.6 : 3.2]);
-  const contentOpacity = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
-  const contentY = useTransform(scrollYProgress, [0, 0.45], [0, -90]);
-  const contentScale = useTransform(scrollYProgress, [0, 0.45], [1, 0.94]);
-  const fadeOut = useTransform(scrollYProgress, [0.65, 1], [0, 1]);
-  const hintOpacity = useTransform(scrollYProgress, [0, 0.08], [1, 0]);
+  const contentOpacity = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [1, 1, 0, 0]);
+  const contentY = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [0, 0, -90, -90]);
+  const contentScale = useTransform(scrollYProgress, [0, 0.3, 0.6, 1], [1, 1, 0.94, 0.94]);
+  const fadeOut = useTransform(scrollYProgress, [0, 0.75, 1], [0, 0, 1]);
+  const hintOpacity = useTransform(scrollYProgress, [0, 0.1, 1], [1, 0, 0]);
 
   const animated = isDesktop && !reduceMotion;
 
   // Tata letak (landasan scroll + sticky) memakai varian CSS lg:/motion-reduce:
   // agar markup server & client identik; JS hanya mengatur nilai transform.
   return (
-    <section ref={ref} id="tentang" className="relative lg:h-[200vh] motion-reduce:lg:h-auto">
+    <section ref={ref} id="tentang" className="relative lg:h-[170vh] motion-reduce:lg:h-auto">
       <div className="relative min-h-screen overflow-hidden lg:sticky lg:top-0 lg:h-screen motion-reduce:lg:relative motion-reduce:lg:h-auto">
         <HeroBackdrop bannerUrl={bannerUrl} scale={animated ? backdropScale : 1} />
 
         <motion.div
           style={animated ? { opacity: contentOpacity, y: contentY, scale: contentScale } : undefined}
-          className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 pt-28 pb-16 lg:h-full lg:min-h-0 lg:pt-24 lg:pb-10"
+          // Desktop: bukan justify-center — banner pengumuman bisa mendorong Hero
+          // ±140px ke bawah dan memotong tombol CTA di layar 768px. Jarak atas
+          // ≈ tengah layar di layar tinggi, minimal 6rem di layar pendek.
+          className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col justify-center px-6 pt-28 pb-16 lg:h-full lg:min-h-0 lg:justify-start lg:pt-[max(6rem,calc(50vh_-_17rem))] lg:pb-10"
         >
           <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-3">
             {/* KONTEN */}
@@ -114,7 +122,7 @@ export default function Hero({ settings }: { settings: SiteSettings | null }) {
                   aria-hidden="true"
                 />
               </p>
-              <h1 className="mb-4 font-display text-5xl leading-[0.92] font-bold tracking-tighter text-slate-900 sm:text-6xl md:text-8xl dark:text-slate-50">
+              <h1 className="mb-4 font-display text-5xl leading-[0.92] font-bold tracking-tighter text-slate-900 sm:text-6xl md:text-8xl lg:text-7xl dark:text-slate-50">
                 {name}
               </h1>
               <p className="mb-8 font-display text-2xl font-medium tracking-tight text-slate-500 sm:text-3xl md:text-4xl dark:text-slate-400">
