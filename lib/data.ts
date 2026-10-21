@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/public";
 import { projectSlug } from "@/lib/slug";
 import type {
@@ -12,6 +13,17 @@ import type {
   TechTag,
 } from "@/lib/types";
 
+// ============================================
+// Lapisan data publik.
+//
+// Halaman dirender per request (CSP nonce, lihat proxy.ts), jadi hasil query
+// di-cache di Data Cache Next: maksimal 1 jam, dan langsung dibuang saat
+// admin menyimpan (revalidatePublicSite → tag PUBLIC_DATA_TAG).
+// ============================================
+
+export const PUBLIC_DATA_TAG = "public-data";
+const CACHE_OPTIONS = { tags: [PUBLIC_DATA_TAG], revalidate: 3600 };
+
 export type PortfolioData = {
   settings: SiteSettings | null;
   skills: Skill[];
@@ -24,17 +36,32 @@ export type PortfolioData = {
 
 type QueryResult = { data: unknown; error: { message: string } | null };
 
-// Error di-log lalu diganti nilai kosong, supaya satu tabel bermasalah
-// tidak menjatuhkan seluruh halaman.
+class QueryError extends Error {}
+
+// Query gagal → lempar error, supaya hasil kosong TIDAK ikut tersimpan di cache
 function rows<T>(table: string, res: QueryResult): T[] {
-  if (res.error) console.error(`[data] Gagal mengambil ${table}:`, res.error.message);
+  if (res.error) throw new QueryError(`${table}: ${res.error.message}`);
   return (res.data as T[] | null) ?? [];
 }
 
 /**
- * Ambil semua data halaman utama sekaligus (paralel) di server.
+ * Jalankan versi ter-cache; bila query gagal, log lalu tampilkan nilai
+ * cadangan (tidak di-cache) agar satu tabel bermasalah tidak menjatuhkan halaman.
  */
-export async function getPortfolioData(): Promise<PortfolioData> {
+async function withFallback<T>(cached: () => Promise<T>, fallback: T): Promise<T> {
+  try {
+    return await cached();
+  } catch (err) {
+    console.error("[data]", err instanceof Error ? err.message : err);
+    return fallback;
+  }
+}
+
+// ============================================
+// Beranda
+// ============================================
+
+async function fetchPortfolioData(): Promise<PortfolioData> {
   const supabase = createPublicClient();
 
   const [settingsRes, skillsRes, projectsRes, experiencesRes, certsRes, tagsRes, statsRes] =
@@ -58,9 +85,7 @@ export async function getPortfolioData(): Promise<PortfolioData> {
       supabase.from("stats").select("*").order("order_index"),
     ]);
 
-  if (settingsRes.error) {
-    console.error("[data] Gagal mengambil site_settings:", settingsRes.error.message);
-  }
+  if (settingsRes.error) throw new QueryError(`site_settings: ${settingsRes.error.message}`);
 
   const skills = rows<Skill>("skills", skillsRes);
   const projects = rows<Project>("projects", projectsRes);
@@ -90,22 +115,61 @@ export async function getPortfolioData(): Promise<PortfolioData> {
   };
 }
 
+const getCachedPortfolioData = unstable_cache(fetchPortfolioData, ["portfolio-data"], CACHE_OPTIONS);
+
+/** Semua data halaman utama, diambil paralel dan di-cache */
+export function getPortfolioData(): Promise<PortfolioData> {
+  return withFallback(getCachedPortfolioData, {
+    settings: null,
+    skills: [],
+    projects: [],
+    experiences: [],
+    certifications: [],
+    techTags: [],
+    stats: [],
+  });
+}
+
 // ============================================
-// Halaman project (/projects/[slug])
+// Halaman project, OG image, sitemap, terminal
 // ============================================
 
-// cache(): generateMetadata, page, dan OG image dalam satu render
-// berbagi satu query yang sama
-export const getProjects = cache(async (): Promise<Project[]> => {
-  const supabase = createPublicClient();
-  const res = await supabase.from("projects").select("*").order("order_index", { ascending: true });
-  return rows<Project>("projects", res);
-});
+const getCachedProjects = unstable_cache(
+  async (): Promise<Project[]> => {
+    const supabase = createPublicClient();
+    const res = await supabase.from("projects").select("*").order("order_index", { ascending: true });
+    return rows<Project>("projects", res);
+  },
+  ["projects"],
+  CACHE_OPTIONS
+);
 
-export const getTechTags = cache(async (): Promise<TechTag[]> => {
-  const supabase = createPublicClient();
-  return rows<TechTag>("tech_tags", await supabase.from("tech_tags").select("*"));
-});
+const getCachedTechTags = unstable_cache(
+  async (): Promise<TechTag[]> => {
+    const supabase = createPublicClient();
+    return rows<TechTag>("tech_tags", await supabase.from("tech_tags").select("*"));
+  },
+  ["tech-tags"],
+  CACHE_OPTIONS
+);
+
+const getCachedSiteSettings = unstable_cache(
+  async (): Promise<SiteSettings | null> => {
+    const supabase = createPublicClient();
+    const res = await supabase.from("site_settings").select("*").eq("id", 1).maybeSingle();
+    if (res.error) throw new QueryError(`site_settings: ${res.error.message}`);
+    return (res.data as SiteSettings | null) ?? null;
+  },
+  ["site-settings"],
+  CACHE_OPTIONS
+);
+
+// cache(): generateMetadata, page, dan OG image dalam satu render berbagi hasil
+export const getProjects = cache(() => withFallback(getCachedProjects, [] as Project[]));
+export const getTechTags = cache(() => withFallback(getCachedTechTags, [] as TechTag[]));
+export const getSiteSettings = cache(() =>
+  withFallback(getCachedSiteSettings, null as SiteSettings | null)
+);
 
 export type ProjectPageData = {
   project: Project;

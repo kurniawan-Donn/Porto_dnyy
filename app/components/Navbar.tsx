@@ -6,6 +6,7 @@ import { Menu, X } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import ThemeToggle from "./ThemeToggle";
 import SoundToggle from "./SoundToggle";
+import TerminalButton from "./terminal/TerminalButton";
 import { useSound } from "./SoundProvider";
 import { useActiveSection } from "../hooks/useActiveSection";
 
@@ -15,6 +16,7 @@ const NAV_LINKS = [
   { name: "Proyek", href: "/#proyek", id: "proyek" },
   { name: "Pengalaman", href: "/#pengalaman", id: "pengalaman" },
   { name: "Sertifikasi", href: "/#sertifikasi", id: "sertifikasi" },
+  { name: "Audit", href: "/#audit", id: "audit" },
   { name: "Kontak", href: "/#kontak", id: "kontak" },
 ];
 
@@ -123,6 +125,7 @@ export default function Navbar() {
           </ul>
 
           <div className="flex items-center gap-2">
+            <TerminalButton />
             <SoundToggle />
             <ThemeToggle />
           </div>
@@ -130,6 +133,7 @@ export default function Navbar() {
 
         {/* Mobile: Toggle + Hamburger */}
         <div className="flex items-center gap-2 lg:hidden">
+          <TerminalButton />
           <SoundToggle />
           <ThemeToggle />
           <button

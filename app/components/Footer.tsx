@@ -8,6 +8,13 @@ export default function Footer() {
       <p className="mt-2 text-xs text-slate-400 dark:text-slate-600">
         Diberdayakan oleh Next.js, Tailwind CSS & Vercel
       </p>
+      <p className="mt-2 hidden text-xs text-slate-400 sm:block dark:text-slate-600">
+        Psst — tekan{" "}
+        <kbd className="rounded border border-slate-300 px-1.5 py-0.5 text-cyan-600 dark:border-slate-700 dark:text-cyan-400">
+          `
+        </kbd>{" "}
+        untuk membuka terminal.
+      </p>
     </footer>
   );
 }

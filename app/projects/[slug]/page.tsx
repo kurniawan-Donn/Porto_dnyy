@@ -4,7 +4,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowLeft, ArrowRight, ExternalLink } from "lucide-react";
 import { SiGithub } from "react-icons/si";
-import { getProjectBySlug, getProjects, getTechTags } from "@/lib/data";
+import { getProjectBySlug, getProjects, getSiteSettings, getTechTags } from "@/lib/data";
+import { toTerminalData } from "@/lib/terminal-data";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import { projectPath, projectSlug } from "@/lib/slug";
 import type { CaseStudy, Project } from "@/lib/types";
@@ -16,9 +17,7 @@ import ScrollProgress from "@/app/components/ScrollProgress";
 import BackToTop from "@/app/components/BackToTop";
 import CustomCursor from "@/app/components/CustomCursor";
 import TechTagList from "@/app/components/TechTagList";
-
-// Sama dengan beranda: cache 1 jam, admin memicu revalidasi langsung
-export const revalidate = 3600;
+import TerminalLauncher from "@/app/components/terminal/TerminalLauncher";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -123,7 +122,12 @@ function SiblingLink({ project, direction }: { project: Project; direction: "pre
 
 export default async function ProjectPage({ params }: Props) {
   const { slug } = await params;
-  const [data, techTags] = await Promise.all([getProjectBySlug(slug), getTechTags()]);
+  const [data, techTags, settings, projects] = await Promise.all([
+    getProjectBySlug(slug),
+    getTechTags(),
+    getSiteSettings(),
+    getProjects(),
+  ]);
   if (!data) notFound();
 
   const { project, index, total, prev, next } = data;
@@ -292,6 +296,7 @@ export default async function ProjectPage({ params }: Props) {
       </main>
 
       <BackToTop />
+      <TerminalLauncher data={toTerminalData(settings, projects)} />
     </>
   );
 }

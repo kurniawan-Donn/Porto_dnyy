@@ -1,6 +1,7 @@
 "use server";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 import { slugify } from "@/lib/slug";
 
 // Pesan ramah untuk pelanggaran unique index projects_slug_key
@@ -46,7 +47,7 @@ export async function createProject(fd: FormData) {
   const { error } = await sb.from("projects").insert(buildPayload(fd));
   if (error) return { success: false, error: toErrorMessage(error) };
   revalidatePath("/admin/projects");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -55,7 +56,7 @@ export async function updateProject(id: string, fd: FormData) {
   const { error } = await sb.from("projects").update(buildPayload(fd)).eq("id", id);
   if (error) return { success: false, error: toErrorMessage(error) };
   revalidatePath("/admin/projects");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -64,6 +65,6 @@ export async function deleteProject(id: string) {
   const { error } = await sb.from("projects").delete().eq("id", id);
   if (error) return { success: false, error: toErrorMessage(error) };
   revalidatePath("/admin/projects");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }

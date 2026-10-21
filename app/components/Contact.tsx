@@ -135,7 +135,7 @@ export default function Contact({ settings }: { settings: ContactSettings }) {
         transition={{ duration: 0.5 }}
       >
         <SectionHeading
-          index="05"
+          index="06"
           code="Handshake"
           title="Mari Terhubung"
         />

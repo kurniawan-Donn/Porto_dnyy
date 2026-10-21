@@ -3,6 +3,7 @@
 import { requireAdmin } from "@/lib/supabase/auth";
 import type { ActionResult } from "@/lib/types";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 
 export async function createTechTag(formData: FormData): Promise<ActionResult> {
   const supabase = await requireAdmin();
@@ -23,7 +24,7 @@ export async function createTechTag(formData: FormData): Promise<ActionResult> {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/tech-tags");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -52,7 +53,7 @@ export async function updateTechTag(
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/tech-tags");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -64,6 +65,6 @@ export async function deleteTechTag(id: string): Promise<ActionResult> {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/tech-tags");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }

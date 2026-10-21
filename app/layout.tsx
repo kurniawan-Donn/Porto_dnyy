@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import { headers } from "next/headers";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import ThemeProvider from "./components/ThemeProvider";
 import StructuredData from "./components/StructuredData";
@@ -78,18 +79,22 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  // Nonce CSP dari proxy.ts. Membaca headers() membuat halaman dirender per
+  // request — syarat CSP nonce; data Supabase tetap di-cache (lib/data.ts).
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <html lang="id" suppressHydrationWarning className="scroll-smooth">
       <body
         className={`${spaceGrotesk.variable} ${jetbrainsMono.variable} font-sans antialiased selection:bg-cyan-500 selection:text-white`}
       >
         <StructuredData />
-        <ThemeProvider>
+        <ThemeProvider nonce={nonce}>
           <SoundProvider>{children}</SoundProvider>
         </ThemeProvider>
       </body>

@@ -1,6 +1,7 @@
 "use server";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 
 function buildPayload(fd: FormData) {
   const autoSource = fd.get("auto_source") as string;
@@ -19,7 +20,7 @@ export async function createStat(fd: FormData) {
   const { error } = await sb.from("stats").insert(buildPayload(fd));
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/stats");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -28,7 +29,7 @@ export async function updateStat(id: string, fd: FormData) {
   const { error } = await sb.from("stats").update(buildPayload(fd)).eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/stats");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -37,6 +38,6 @@ export async function deleteStat(id: string) {
   const { error } = await sb.from("stats").delete().eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/stats");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }

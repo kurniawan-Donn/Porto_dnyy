@@ -1,6 +1,7 @@
 "use server";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 
 function parseTags(raw: string): string[] {
   return raw.split(",").map((s) => s.trim()).filter(Boolean);
@@ -25,7 +26,7 @@ export async function createExperience(fd: FormData) {
   const { error } = await sb.from("experiences").insert(buildPayload(fd));
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/experience");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -34,7 +35,7 @@ export async function updateExperience(id: string, fd: FormData) {
   const { error } = await sb.from("experiences").update(buildPayload(fd)).eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/experience");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -43,6 +44,6 @@ export async function deleteExperience(id: string) {
   const { error } = await sb.from("experiences").delete().eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/experience");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }

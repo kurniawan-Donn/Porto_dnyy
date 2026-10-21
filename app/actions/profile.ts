@@ -2,6 +2,7 @@
 
 import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 
 export async function updateProfile(formData: FormData) {
   const supabase = await requireAdmin();
@@ -34,7 +35,7 @@ export async function updateProfile(formData: FormData) {
   }
 
   // Refresh cache halaman
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   revalidatePath("/admin/profile");
 
   return { success: true };

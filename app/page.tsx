@@ -1,4 +1,5 @@
 import { getPortfolioData } from "@/lib/data";
+import { toTerminalData } from "@/lib/terminal-data";
 import SkipLink from "./components/SkipLink";
 import ScrollProgress from "./components/ScrollProgress";
 import BackToTop from "./components/BackToTop";
@@ -13,11 +14,8 @@ import Certifications from "./components/Certifications";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import AnnouncementBanner from "./components/AnnouncementBanner";
-
-// ISR: halaman di-cache dan dibangun ulang paling lama tiap 1 jam.
-// Setiap simpan dari admin memanggil revalidatePath("/"), jadi perubahan
-// tetap langsung tampil tanpa harus menunggu.
-export const revalidate = 3600;
+import AuditReport from "./components/AuditReport";
+import TerminalLauncher from "./components/terminal/TerminalLauncher";
 
 export default async function Home() {
   const { settings, skills, projects, experiences, certifications, techTags, stats } =
@@ -45,11 +43,13 @@ export default async function Home() {
         <Projects projects={projects} techTags={techTags} />
         <Experience experiences={experiences} techTags={techTags} />
         <Certifications items={certifications} />
+        <AuditReport />
         <Contact settings={settings} />
         <Footer />
       </main>
 
       <BackToTop />
+      <TerminalLauncher data={toTerminalData(settings, projects)} />
     </>
   );
 }

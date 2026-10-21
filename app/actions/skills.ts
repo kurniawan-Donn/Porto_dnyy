@@ -2,6 +2,7 @@
 
 import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 
 // ============================================
 // CREATE
@@ -20,7 +21,7 @@ export async function createSkill(formData: FormData) {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/skills");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -44,7 +45,7 @@ export async function updateSkill(id: string, formData: FormData) {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/skills");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -59,6 +60,6 @@ export async function deleteSkill(id: string) {
   if (error) return { success: false, error: error.message };
 
   revalidatePath("/admin/skills");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }

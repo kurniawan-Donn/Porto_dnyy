@@ -1,6 +1,7 @@
 "use server";
 import { requireAdmin } from "@/lib/supabase/auth";
 import { revalidatePath } from "next/cache";
+import { revalidatePublicSite } from "@/lib/revalidate";
 
 function buildPayload(fd: FormData) {
   return {
@@ -19,7 +20,7 @@ export async function createCertification(fd: FormData) {
   const { error } = await sb.from("certifications").insert(buildPayload(fd));
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/certifications");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -28,7 +29,7 @@ export async function updateCertification(id: string, fd: FormData) {
   const { error } = await sb.from("certifications").update(buildPayload(fd)).eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/certifications");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }
 
@@ -37,6 +38,6 @@ export async function deleteCertification(id: string) {
   const { error } = await sb.from("certifications").delete().eq("id", id);
   if (error) return { success: false, error: error.message };
   revalidatePath("/admin/certifications");
-  revalidatePath("/", "layout");
+  revalidatePublicSite();
   return { success: true };
 }

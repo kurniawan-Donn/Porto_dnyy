@@ -127,16 +127,20 @@ section[id] {
   scroll-margin-top: 80px;
 }
 
-/* Focus ring untuk aksesibilitas keyboard */
-:focus-visible {
-  outline: 2px solid #06b6d4;
-  outline-offset: 2px;
-  border-radius: 4px;
-}
+/* Focus ring untuk aksesibilitas keyboard. Di dalam @layer base supaya
+   utility Tailwind (mis. focus-visible:outline-none) tetap bisa menimpanya —
+   aturan tanpa layer selalu menang atas utility. */
+@layer base {
+  :focus-visible {
+    outline: 2px solid #06b6d4;
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 
-/* Hilangkan focus ring untuk mouse click */
-:focus:not(:focus-visible) {
-  outline: none;
+  /* Hilangkan focus ring untuk mouse click */
+  :focus:not(:focus-visible) {
+    outline: none;
+  }
 }
 
 /* Hormati preferensi user yang tidak suka animasi */
